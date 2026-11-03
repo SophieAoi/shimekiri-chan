@@ -229,6 +229,79 @@ describe('cleaner lists', () => {
   });
 });
 
+describe('tab badges', () => {
+  it('counts unfinished tasks and turns red only when one is urgent', () => {
+    saveData({
+      ...createSeedData(),
+      tasks: [
+        makeTask({ id: 'calm', listId: 'seed-comp3040', due: addDays(today(), 20) }),
+        makeTask({ id: 'hot', listId: 'seed-comp3070', due: today() }),
+        makeTask({ id: 'cold', listId: 'seed-comp3070', due: addDays(today(), 20) }),
+        makeTask({ id: 'done', listId: 'seed-comp3041', due: today(), completed: true }),
+      ],
+    });
+    setup();
+
+    const calm = screen.getByRole('tab', { name: 'COMP3040' });
+    expect(calm).toHaveAccessibleDescription('1 to do');
+    expect(within(calm).getByText('1')).toHaveAttribute('data-urgent', 'false');
+
+    const hot = screen.getByRole('tab', { name: 'COMP3070' });
+    expect(hot).toHaveAccessibleDescription('2 to do, 1 urgent');
+    expect(within(hot).getByText('2')).toHaveAttribute('data-urgent', 'true');
+
+    // Finished work doesn't count, so this tab has no badge at all.
+    expect(screen.getByRole('tab', { name: 'COMP3041' })).not.toHaveAttribute('aria-describedby');
+  });
+});
+
+describe('sidebar', () => {
+  // Pretend the screen is wide enough for the sidebar layout.
+  const wide = () =>
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: () => ({ matches: true, addEventListener() {}, removeEventListener() {} }),
+    });
+  const narrow = () => Reflect.deleteProperty(window, 'matchMedia');
+
+  it('folds modules away, keeping a combined badge and the open tab reachable', async () => {
+    wide();
+    try {
+      saveData({ ...createSeedData(), tasks: [makeTask({ listId: 'seed-comp3070', due: today() })] });
+      const { user } = setup();
+      await openTab(user, /^COMP3070/);
+      const toggle = screen.getByRole('button', { name: 'Modules' });
+
+      await user.click(toggle);
+
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByRole('tab', { name: /^COMP3070/ })).not.toBeInTheDocument();
+      expect(toggle).toHaveAccessibleDescription('1 to do, 1 urgent');
+      // The open module's tasks are still on screen.
+      expect(screen.getByText('Read chapter 3')).toBeInTheDocument();
+
+      await user.click(toggle);
+      expect(screen.getByRole('tab', { name: /^COMP3070/ })).toBeVisible();
+    } finally {
+      narrow();
+    }
+  });
+
+  it('remembers that modules were folded', async () => {
+    wide();
+    try {
+      const { user, unmount } = setup();
+      await user.click(screen.getByRole('button', { name: 'Modules' }));
+      unmount();
+
+      render(<App />);
+      expect(screen.getByRole('button', { name: 'Modules' })).toHaveAttribute('aria-expanded', 'false');
+    } finally {
+      narrow();
+    }
+  });
+});
+
 describe('modules', () => {
   it('adds a module and switches to it', async () => {
     const { user } = setup();

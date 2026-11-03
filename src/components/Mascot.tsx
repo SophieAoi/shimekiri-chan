@@ -3,6 +3,21 @@ import styles from './Mascot.module.css';
 
 const INK = 'var(--ink)';
 
+/** Big glossy eyes: a dark circle with two white highlights, the classic "cute" recipe. */
+function Eyes({ blink = false }: { blink?: boolean }) {
+  return (
+    <g className={blink ? styles.blink : undefined}>
+      {[42, 78].map((cx) => (
+        <g key={cx}>
+          <circle cx={cx} cy="63" r="8.5" fill={INK} />
+          <circle cx={cx + 2.6} cy="59" r="3.2" fill="#fff" />
+          <circle cx={cx - 3} cy="67.5" r="1.5" fill="#fff" />
+        </g>
+      ))}
+    </g>
+  );
+}
+
 /** Each mood only swaps the face and small extras, so the body stays one shared shape. */
 function Face({ mood }: { mood: Mood }) {
   const stroke = { fill: 'none', stroke: INK, strokeWidth: 3, strokeLinecap: 'round' } as const;
@@ -10,8 +25,8 @@ function Face({ mood }: { mood: Mood }) {
   if (mood === 'happy') {
     return (
       <>
-        <path d="M37 58q6-9 12 0M71 58q6-9 12 0" {...stroke} />
-        <path d="M51 65h18q-1 12-9 12t-9-12Z" fill="var(--pink-700)" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M33 66q9-14 18 0M69 66q9-14 18 0" {...stroke} strokeWidth="3.5" />
+        <path d="M53 72h14q-1 10-7 10t-7-10Z" fill="var(--pink-700)" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
         <path className={styles.sparkle} d="M10 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="var(--pink-300)" />
         <path className={styles.sparkle} d="M108 8l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="var(--teal-300)" />
       </>
@@ -22,12 +37,10 @@ function Face({ mood }: { mood: Mood }) {
     return (
       <>
         {/* Inner ends raised: worried, not cross. */}
-        <path d="M36 49l11-4M84 49l-11-4" {...stroke} />
-        <circle cx="43" cy="58" r="5.5" fill={INK} />
-        <circle cx="77" cy="58" r="5.5" fill={INK} />
-        <circle cx="45" cy="56" r="1.8" fill="#fff" />
-        <circle cx="79" cy="56" r="1.8" fill="#fff" />
-        <path d="M50 71q5-6 10 0t10 0" {...stroke} />
+        <path d="M33 50l10-4M87 50l-10-4" {...stroke} strokeWidth="2.5" />
+        <Eyes />
+        {/* A round "gasp" mouth. */}
+        <circle cx="60" cy="78" r="4.5" fill="var(--pink-700)" stroke={INK} strokeWidth="2.5" />
         <path className={styles.sweat} d="M101 28c5 7 7 10 7 13a7 7 0 0 1-14 0c0-3 2-6 7-13Z" fill="var(--teal-300)" stroke="var(--teal-700)" strokeWidth="1.5" />
       </>
     );
@@ -35,8 +48,9 @@ function Face({ mood }: { mood: Mood }) {
 
   return (
     <>
-      <path d="M37 56q6 6 12 0M71 56q6 6 12 0M54 68q6 5 12 0" {...stroke} />
-      <text className={styles.snooze} x="94" y="30" fill="var(--teal-700)">z</text>
+      <Eyes blink />
+      {/* A small round "o" mouth. */}
+      <circle cx="60" cy="77" r="2.8" fill="var(--pink-700)" stroke={INK} strokeWidth="2" />
     </>
   );
 }
@@ -59,8 +73,8 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
             strokeWidth="3"
           />
           <path d="M42 107V88a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v19Z" fill="var(--teal-700)" />
-          <circle cx="31" cy="68" r="6.5" fill="var(--pink-200)" />
-          <circle cx="89" cy="68" r="6.5" fill="var(--pink-200)" />
+          <circle cx="28" cy="75" r="7" fill="var(--pink-200)" />
+          <circle cx="92" cy="75" r="7" fill="var(--pink-200)" />
           <Face mood={mood} />
         </g>
       </svg>

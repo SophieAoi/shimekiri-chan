@@ -7,7 +7,8 @@
   min-width: 0;
 }
 
-.list {
+/* Holds both tablists. In the row layouts it is the part that wraps or scrolls. */
+.lists {
   display: flex;
   flex: 1;
   flex-wrap: wrap;
@@ -17,9 +18,19 @@
   padding: var(--space-1);
 }
 
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.list[hidden] {
+  display: none;
+}
+
 .tab {
-  /* Contains the badge's absolutely positioned screen-reader text, which would
-     otherwise escape the scroll area and widen the page. */
+  /* Keeps any positioned descendants inside the scroll area. */
   position: relative;
   display: inline-flex;
   flex: none;
@@ -66,19 +77,23 @@
   min-width: 20px;
   padding: 0 6px;
   border-radius: var(--radius-pill);
-  background: var(--pink-200);
-  color: var(--pink-800);
+  background: var(--green-100);
+  color: var(--green-800);
   font-size: 0.75rem;
+  font-weight: var(--weight-bold);
   line-height: 20px;
   text-align: center;
 }
 
+.badge[data-urgent='true'] {
+  background: var(--red-100);
+  color: var(--red-700);
+}
+
 .add {
-  display: inline-flex;
+  display: inline-grid;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
+  place-items: center;
   width: 44px;
   height: 44px;
   margin-top: var(--space-1);
@@ -87,8 +102,6 @@
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink-soft);
-  font-size: 0.9375rem;
-  font-weight: var(--weight-medium);
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
@@ -99,18 +112,8 @@
   color: var(--pink-800);
 }
 
-/* The text stays readable by screen readers even when only the + is visible. */
-.addLabel {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 @media (max-width: 599px) {
-  .list {
+  .lists {
     flex-wrap: nowrap;
     padding-inline-end: var(--space-6);
     /* Keeps the selected tab clear of the fade when it is scrolled into view. */
@@ -120,33 +123,33 @@
     mask-image: linear-gradient(to right, #000 calc(100% - var(--space-6)), transparent);
   }
 
-  .list::-webkit-scrollbar {
+  .lists::-webkit-scrollbar {
     display: none;
+  }
+
+  .list {
+    flex: none;
+    flex-wrap: nowrap;
   }
 }
 
 @media (min-width: 900px) {
-  .bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-1);
-  }
-
+  .bar,
+  .lists,
   .list {
     flex-direction: column;
     flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .list {
     gap: 2px;
   }
 
   .tab {
     gap: var(--space-2);
-    min-height: 44px;
     padding: 8px 12px;
     border-radius: var(--radius-sm);
-  }
-
-  .tab[data-group='fixed'] + .tab[data-group='module'] {
-    margin-top: var(--space-4);
   }
 
   .tab[aria-selected='true'] {
@@ -166,19 +169,61 @@
     font-size: 0.8125rem;
     font-weight: var(--weight-regular);
   }
+}
 
-  .add {
-    justify-content: flex-start;
-    width: auto;
-    margin: var(--space-2) var(--space-1) 0;
-    padding: 0 12px;
-    border-radius: var(--radius-sm);
-  }
+/* "Modules" row in the sidebar: styled like the Upcoming and General tabs, with
+   the fold toggle filling the row and + at the end. */
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: var(--space-2);
+}
 
-  .addLabel {
-    position: static;
-    width: auto;
-    height: auto;
-    clip-path: none;
-  }
+.groupToggle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-bold);
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.groupToggle:hover {
+  background: var(--teal-100);
+  color: var(--teal-800);
+}
+
+/* While folded, matches a selected tab, since the open tab lives inside. */
+.groupHeader[data-active='true'] .groupToggle {
+  background: var(--teal-100);
+  color: var(--teal-800);
+}
+
+.groupLabel {
+  flex: 1;
+}
+
+.groupToggle .badge {
+  margin-inline-start: 0;
+}
+
+.chevron {
+  flex: none;
+  color: var(--ink-soft);
+  transition: transform 0.2s ease;
+}
+
+.groupToggle[aria-expanded='false'] .chevron {
+  transform: rotate(-90deg);
 }

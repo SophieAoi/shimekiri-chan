@@ -44,12 +44,6 @@
   transform-origin: center bottom;
 }
 
-.snooze {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-}
-
 /* Each mood has its own motion so the state reads at a glance. */
 [data-mood='relaxed'] .body {
   animation: sway 4s ease-in-out infinite;
@@ -73,8 +67,11 @@
   animation: twinkle 0.8s ease-in-out infinite alternate;
 }
 
-.snooze {
-  animation: float 3s ease-in-out infinite;
+/* A quick blink every few seconds while relaxed. */
+.blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 4.5s ease-in-out infinite;
 }
 
 @keyframes sway {
@@ -104,9 +101,9 @@
   to { opacity: 1; transform: scale(1.1); }
 }
 
-@keyframes float {
-  0%, 100% { opacity: 0.5; transform: translateY(2px); }
-  50% { opacity: 1; transform: translateY(-3px); }
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
 }
 
 @media (max-width: 599px) {

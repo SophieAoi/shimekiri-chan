@@ -29,7 +29,11 @@
   --butter-800: #6e4700;
 
   --red-50: #fff0ee;
+  --red-100: #fddcd8;
   --red-700: #b3261e;
+
+  --green-100: #d8f3dc;
+  --green-800: #1e6b34;
 
   --font-body: 'Nunito Variable', 'Hiragino Maru Gothic ProN', system-ui, sans-serif;
   --font-display: 'Fredoka Variable', 'Nunito Variable', system-ui, sans-serif;

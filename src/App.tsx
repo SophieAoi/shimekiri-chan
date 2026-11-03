@@ -18,11 +18,13 @@ import {
 import { useMediaQuery } from './hooks/useMediaQuery';
 import { usePrefs } from './hooks/usePrefs';
 import { getMoodMessage } from './lib/mood';
-import { isUrgent, tasksForList } from './lib/tasks';
+import { isUrgent, tasksForList, upcomingTasks } from './lib/tasks';
 import { TrackerProvider, useTracker } from './state/TrackerContext';
 import type { Module, Task } from './types';
 
 const PANEL_ID = 'task-panel';
+/** Stored with the collapsed task sections, so the sidebar remembers it too. */
+const MODULES_SECTION_KEY = 'sidebar:modules';
 
 type OpenDialog =
   | { kind: 'task'; task: Task | null }
@@ -37,7 +39,11 @@ function Shell() {
   const closeDialog = () => setDialog(null);
 
   const urgent = data.tasks.filter((task) => isUrgent(task, today));
-  const countUrgent = (listId: string) => tasksForList(urgent, listId).length;
+  const open = data.tasks.filter((task) => !task.completed);
+  const counts = (listId: string) => ({
+    openCount: tasksForList(open, listId).length,
+    urgentCount: tasksForList(urgent, listId).length,
+  });
 
   const tabs: TabItem[] = [
     {
@@ -45,7 +51,9 @@ function Shell() {
       label: UPCOMING_LABEL,
       icon: '📅',
       fullLabel: UPCOMING_LABEL,
-      urgentCount: 0,
+      // Every urgent task falls inside the Upcoming window, so all of them count here.
+      openCount: upcomingTasks(data.tasks, today).length,
+      urgentCount: urgent.length,
       group: 'fixed',
     },
     {
@@ -53,7 +61,7 @@ function Shell() {
       label: GENERAL_LABEL,
       icon: '⭐',
       fullLabel: GENERAL_LABEL,
-      urgentCount: countUrgent(GENERAL_LIST_ID),
+      ...counts(GENERAL_LIST_ID),
       group: 'fixed',
     },
     ...data.modules.map((module): TabItem => ({
@@ -61,7 +69,7 @@ function Shell() {
       label: module.code || module.name,
       detail: module.code ? module.name : undefined,
       fullLabel: [module.code, module.name].filter(Boolean).join(' '),
-      urgentCount: countUrgent(module.id),
+      ...counts(module.id),
       group: 'module',
     })),
   ];
@@ -96,6 +104,8 @@ function Shell() {
             activeId={activeTab.id}
             panelId={PANEL_ID}
             vertical={isWide}
+            modulesCollapsed={collapsed.includes(MODULES_SECTION_KEY)}
+            onToggleModules={() => toggleSection(MODULES_SECTION_KEY)}
             onSelect={setActiveTab}
             onAddModule={() => setDialog({ kind: 'module', module: null })}
           />
