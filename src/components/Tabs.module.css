@@ -1,0 +1,184 @@
+/* Three layouts: a scrolling row on phones, a wrapping row on tablets, and a
+   vertical sidebar list from 900px (see SIDEBAR_MEDIA_QUERY). */
+.bar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+  /* Padding keeps focus rings from being clipped. */
+  padding: var(--space-1);
+}
+
+.tab {
+  /* Contains the badge's absolutely positioned screen-reader text, which would
+     otherwise escape the scroll area and widen the page. */
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-bold);
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tab:hover {
+  background: var(--teal-100);
+  color: var(--teal-800);
+}
+
+.tab[aria-selected='true'] {
+  background: var(--teal-700);
+  color: var(--white);
+}
+
+.icon {
+  flex: none;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.badge {
+  flex: none;
+  margin-inline-start: auto;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--pink-200);
+  color: var(--pink-800);
+  font-size: 0.75rem;
+  line-height: 20px;
+  text-align: center;
+}
+
+.add {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 44px;
+  height: 44px;
+  margin-top: var(--space-1);
+  padding: 0;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.add:hover {
+  border-color: var(--pink-300);
+  background: var(--pink-50);
+  color: var(--pink-800);
+}
+
+/* The text stays readable by screen readers even when only the + is visible. */
+.addLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 599px) {
+  .list {
+    flex-wrap: nowrap;
+    padding-inline-end: var(--space-6);
+    /* Keeps the selected tab clear of the fade when it is scrolled into view. */
+    scroll-padding-inline: var(--space-6);
+    overflow-x: auto;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--space-6)), transparent);
+  }
+
+  .list::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+  }
+
+  .list {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 2px;
+  }
+
+  .tab {
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+  }
+
+  .tab[data-group='fixed'] + .tab[data-group='module'] {
+    margin-top: var(--space-4);
+  }
+
+  .tab[aria-selected='true'] {
+    background: var(--teal-100);
+    color: var(--teal-800);
+  }
+
+  .label,
+  .detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .detail {
+    color: var(--ink-soft);
+    font-size: 0.8125rem;
+    font-weight: var(--weight-regular);
+  }
+
+  .add {
+    justify-content: flex-start;
+    width: auto;
+    margin: var(--space-2) var(--space-1) 0;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+  }
+
+  .addLabel {
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+  }
+}

@@ -1,0 +1,202 @@
+/* Base styles and the few controls shared across components. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, var(--teal-50) 0, var(--cream) 240px);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: var(--weight-regular);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pink-700);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--teal-700);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--teal-800);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-soft);
+}
+
+.btn-ghost:hover {
+  background: var(--paper-muted);
+  color: var(--ink);
+}
+
+.btn-danger {
+  background: var(--red-700);
+  color: var(--white);
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: var(--teal-50);
+  color: var(--teal-800);
+}
+
+.icon-btn-danger:hover {
+  background: var(--pink-50);
+  color: var(--pink-800);
+}
+
+.input,
+.select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Toolbar selects size to their text rather than filling the row. */
+label > .select {
+  width: auto;
+}
+
+.input:hover,
+.select:hover {
+  border-color: var(--teal-300);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--teal-700);
+  box-shadow: 0 0 0 3px var(--teal-100);
+  outline: none;
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--red-700);
+}
+
+.input[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 3px var(--red-50);
+}
+
+textarea.input {
+  display: block;
+  resize: vertical;
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: var(--space-4);
+}
+
+.field > label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: var(--weight-bold);
+}
+
+.field-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.field-error {
+  margin: 6px 0 0;
+  color: var(--red-700);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 399px) {
+  .field-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

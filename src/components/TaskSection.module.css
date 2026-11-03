@@ -1,0 +1,113 @@
+.section + .section {
+  margin-top: var(--space-5);
+}
+
+.heading {
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-2);
+  margin-inline-start: calc(-1 * var(--space-2));
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: var(--weight-bold);
+  text-align: start;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: var(--paper-muted);
+}
+
+.chevron {
+  flex: none;
+  color: var(--ink-soft);
+  transition: transform 0.2s ease;
+}
+
+.toggle[aria-expanded='false'] .chevron {
+  transform: rotate(-90deg);
+}
+
+.icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+}
+
+.icon[data-tone='exam'] {
+  background: var(--pink-100);
+  color: var(--pink-800);
+}
+
+.icon[data-tone='homework'] {
+  background: var(--teal-100);
+  color: var(--teal-800);
+}
+
+.icon[data-tone='coursework'] {
+  background: var(--butter-100);
+  color: var(--butter-800);
+}
+
+.icon[data-tone='done'] {
+  background: var(--paper-muted);
+  color: var(--ink-soft);
+}
+
+/* Completed sits apart from the live sections, below a hairline. */
+.section[data-tone='done'] {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.section[data-tone='done'] .toggle {
+  color: var(--ink-soft);
+}
+
+.count {
+  min-width: 22px;
+  padding: 0 7px;
+  border-radius: var(--radius-pill);
+  background: var(--paper-muted);
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 20px;
+  text-align: center;
+}
+
+.urgent {
+  margin-inline-start: auto;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: var(--pink-100);
+  color: var(--pink-800);
+  font-size: 0.75rem;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list[hidden] {
+  display: none;
+}

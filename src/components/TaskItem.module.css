@@ -1,0 +1,168 @@
+/* Grid areas let phones give the details the full width under the title row. */
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'check title actions'
+    'check meta actions'
+    'check notes actions';
+  align-items: start;
+  column-gap: var(--space-3);
+  padding: 14px var(--space-3) 14px var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.item:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Urgency stripe: drawn inside the card so the rounded corners stay clean. */
+.item::before {
+  content: '';
+  position: absolute;
+  inset-block: 10px;
+  inset-inline-start: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: transparent;
+}
+
+.item[data-urgency='overdue'] {
+  border-color: #f3d3cf;
+  background: var(--red-50);
+}
+
+.item[data-urgency='overdue']::before {
+  background: var(--red-700);
+}
+
+/* Only overdue gets a tinted card. Due-soon keeps the stripe and amber text, so a
+   busy week doesn't turn every card yellow and drown out the overdue ones. */
+.item[data-urgency='today']::before,
+.item[data-urgency='soon']::before {
+  background: var(--butter-500);
+}
+
+.item[data-urgency='overdue'] .due {
+  color: var(--red-700);
+  font-weight: var(--weight-bold);
+}
+
+.item[data-urgency='today'] .due,
+.item[data-urgency='soon'] .due {
+  color: var(--butter-800);
+  font-weight: var(--weight-bold);
+}
+
+.item[data-urgency='done'] {
+  background: var(--paper-muted);
+}
+
+.item[data-urgency='done'] .title {
+  color: var(--ink-soft);
+  font-weight: var(--weight-medium);
+  text-decoration: line-through;
+}
+
+/* A 44px hit area around a smaller visual circle, using a transparent border. */
+.check {
+  grid-area: check;
+  appearance: none;
+  box-sizing: content-box;
+  width: 20px;
+  height: 20px;
+  margin: -12px;
+  border: 12px solid transparent;
+  border-radius: 50%;
+  background: var(--white) padding-box;
+  box-shadow: inset 0 0 0 2px var(--teal-700);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.check:hover {
+  background-color: var(--teal-50);
+}
+
+.check:checked {
+  background: var(--teal-700)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E")
+    center / 15px no-repeat padding-box;
+  animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+  50% { transform: scale(1.2); }
+}
+
+.title {
+  grid-area: title;
+  margin: 0;
+  font-weight: var(--weight-bold);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--space-3);
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-size: 0.8125rem;
+}
+
+.list {
+  overflow-wrap: anywhere;
+  font-weight: var(--weight-bold);
+}
+
+.weight {
+  font-weight: var(--weight-medium);
+}
+
+.notes {
+  grid-area: notes;
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.actions {
+  grid-area: actions;
+  display: flex;
+  margin-block: -12px;
+  margin-inline-end: -6px;
+}
+
+/* With a mouse, row actions appear on hover or keyboard focus. Touch screens
+   have no hover, so they keep them visible. */
+@media (hover: hover) and (pointer: fine) {
+  .actions {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .item:hover .actions,
+  .item:focus-within .actions {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 599px) {
+  .item {
+    grid-template-areas:
+      'check title actions'
+      'check meta meta'
+      'check notes notes';
+  }
+}

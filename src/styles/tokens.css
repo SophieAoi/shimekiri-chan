@@ -1,0 +1,61 @@
+/* Design tokens. Pastels are used for surfaces; text always uses the deep shades. */
+:root {
+  color-scheme: light;
+
+  --ink: #2b3a42;
+  --ink-soft: #52626b;
+  --white: #ffffff;
+  --paper: #fffdf9;
+  --paper-muted: #f5f3ee;
+  --cream: #fff8ef;
+
+  --teal-50: #eefaf8;
+  --teal-100: #d5f2ee;
+  --teal-200: #b2e6df;
+  --teal-300: #8fd9d1;
+  --teal-700: #0f6e68;
+  --teal-800: #0b5450;
+
+  --pink-50: #fff3f6;
+  --pink-100: #ffe1e9;
+  --pink-200: #ffc9d7;
+  --pink-300: #ffb0c4;
+  --pink-700: #b02a5b;
+  --pink-800: #8a1f47;
+
+  --butter-50: #fff9e8;
+  --butter-100: #fff0c7;
+  --butter-500: #e8b23a;
+  --butter-800: #6e4700;
+
+  --red-50: #fff0ee;
+  --red-700: #b3261e;
+
+  --font-body: 'Nunito Variable', 'Hiragino Maru Gothic ProN', system-ui, sans-serif;
+  --font-display: 'Fredoka Variable', 'Nunito Variable', system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Hairlines do the separating; shadows are reserved for things that float. */
+  --line: #ebe6dd;
+  --line-strong: #d9d3c8;
+
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(43 58 66 / 6%);
+  --shadow-md: 0 1px 3px rgb(43 58 66 / 5%), 0 8px 24px rgb(43 58 66 / 6%);
+  --shadow-lg: 0 12px 32px rgb(43 58 66 / 18%);
+
+  --weight-regular: 500;
+  --weight-medium: 600;
+  --weight-bold: 700;
+}

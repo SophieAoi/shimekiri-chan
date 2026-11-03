@@ -1,0 +1,26 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px 1px 6px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: var(--weight-bold);
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.tag[data-type='exam'] {
+  background: var(--pink-100);
+  color: var(--pink-800);
+}
+
+.tag[data-type='homework'] {
+  background: var(--teal-100);
+  color: var(--teal-800);
+}
+
+.tag[data-type='coursework'] {
+  background: var(--butter-100);
+  color: var(--butter-800);
+}
