@@ -5,6 +5,8 @@ is Japanese for "deadline". Tasks are kept in tabs for each module, sorted by du
 date and grouped by type. Shimekiri-chan, an onigiri mascot, keeps an eye on what's
 coming up.
 
+**Try it:** https://sophieaoi.github.io/shimekiri-chan/
+
 <p>
   <img src="docs/screenshots/desktop.png" alt="Shimekiri on desktop, showing a module tab with exam, homework and coursework sections" width="640">
   <img src="docs/screenshots/mobile.png" alt="Shimekiri on a phone" width="180">
@@ -63,8 +65,12 @@ that and run `PLAYWRIGHT_CHANNEL=chrome npm run test:e2e` instead.
 
 ### Deploying
 
+Every push to `main` runs the tests, builds the app and publishes it to GitHub Pages
+([workflow](.github/workflows/deploy.yml)). The first time, enable it under
+**Settings → Pages → Source: GitHub Actions**.
+
 `npm run build` produces a static site in `dist/` with relative asset paths, so it
-works on any static host, including a GitHub Pages sub-path.
+also works on any other static host.
 
 ## Tech stack
 
