@@ -7,16 +7,15 @@ coming up.
 
 **Try it:** https://sophieaoi.github.io/shimekiri-chan/
 
-<p>
-  <img src="docs/screenshots/desktop.png" alt="Shimekiri on desktop, showing a module tab with exam, homework and coursework sections" width="640">
-  <img src="docs/screenshots/mobile.png" alt="Shimekiri on a phone" width="180">
-</p>
+![Shimekiri on desktop and on a phone, showing a module tab with exam, homework and coursework sections](docs/screenshots/overview.png)
 
 ## Features
 
 - **Tabs:** a General tab, one tab per module, and an Upcoming tab that gathers
   overdue tasks and the next 14 days from every tab, grouped under Overdue, Today,
-  Next 7 days and Later. You can add, rename and delete module tabs.
+  Next 7 days and Later. You can add, rename and delete module tabs, and fold them
+  away under Modules. Each tab shows how many tasks are left: green normally, red
+  when something is urgent.
 - **Task types:** Exam, Homework and Coursework, each with its own coloured tag and
   icon. Each tab groups tasks into collapsible sections by type, with a filter to show
   one type at a time.
@@ -106,6 +105,10 @@ docs/                      Build plan and screenshots
   in one shows up in the other instead of being overwritten.
 - **Accent colours are for decoration only.** All text uses the deep shades, so the
   pastel palette stays readable.
+
+## About
+
+This is a vibe-coded project.
 
 ## Licence
 
