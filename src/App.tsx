@@ -92,7 +92,7 @@ function Shell() {
       <div className={styles.sidebar}>
         <header className={styles.header}>
           <h1 className={styles.logo}>
-            Shimekiri
+            <span className={styles.wordmark}>Shimekiri</span>
             <span className={styles.kanji} lang="ja">
               締切
             </span>

@@ -56,6 +56,15 @@
   letter-spacing: -0.01em;
 }
 
+.wordmark {
+  font-family: var(--font-script);
+  /* Script faces have a small x-height, so the word is set larger to hold its own. */
+  font-size: 1.5em;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
 .kanji {
   color: var(--indigo-700);
   font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
