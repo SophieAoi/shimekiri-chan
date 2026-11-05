@@ -212,7 +212,7 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
 
           {/* Diamond stud on the ear, seen face-on like a real piercing. */}
-          <DiamondStud x={99} y={35} fill={`url(#${diamond})`} />
+          <DiamondStud x={99.5} y={30} fill={`url(#${diamond})`} />
 
           <Face mood={mood} iris={iris} />
         </g>
