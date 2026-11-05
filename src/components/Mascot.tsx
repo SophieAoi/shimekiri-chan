@@ -1,52 +1,59 @@
-import { useId } from 'react';
 import type { Mood } from '../types';
 import styles from './Mascot.module.css';
 
-/** Near-black for the face, like the nori. */
-const INK = '#1f1f1f';
-const NORI = '#1c211f';
-const MOUTH = '#3a2a2a';
+/** Palette for Shimekiri-chan. Kept here because nothing else in the app uses it. */
+const INK = '#26222e';
+const HAIR = '#2b2733';
+const SKIN = '#f8e3d7';
+const SKIN_EDGE = '#e6c3b2';
+const LIPS = '#b2536a';
+const BLUSH = '#f1a5a8';
+const GOLD = '#d2a54c';
+const FRAME = '#2b2b33';
 
-/** The rice ball's outline: a rounded triangle. Shared by the fill, the nori clip and the edge. */
-const BODY = 'M60 10c10 0 16 6 22 16l24 42c10 18 0 40-22 40H36C14 108 4 86 14 68l24-42c6-10 12-16 22-16Z';
+/** Lens centres. Eyes, brows and blush are placed relative to these. */
+const LENSES = [44, 72] as const;
+const EYE_Y = 65;
 
-/**
- * Rice grains scattered over the body: [x, y, angle]. Fixed rather than random so the
- * drawing is identical on every render. The face area is left mostly clear.
- */
-const GRAINS: readonly (readonly [number, number, number])[] = [
-  [58, 20, 20], [50, 30, -30], [66, 28, 45], [44, 40, 10], [74, 38, -20], [59, 38, 70],
-  [36, 52, -45], [84, 50, 30], [28, 64, 60], [92, 62, -60], [22, 78, 15], [98, 78, -10],
-  [20, 92, -35], [100, 92, 40], [30, 100, 70], [90, 100, -70], [52, 48, -15], [68, 47, 25],
-  [33, 86, 5], [87, 86, -5], [26, 72, -20],
-];
-
-/** Big glossy eyes: a dark circle with two white highlights. */
+/** Big glossy eyes with a small flick of lashes at the outer corner. */
 function Eyes({ blink = false }: { blink?: boolean }) {
   return (
     <g className={blink ? styles.blink : undefined}>
-      {[42, 78].map((cx) => (
-        <g key={cx}>
-          <circle cx={cx} cy="63" r="8.5" fill={INK} />
-          <circle cx={cx + 2.6} cy="59" r="3.2" fill="#fff" />
-          <circle cx={cx - 3} cy="67.5" r="1.5" fill="#fff" />
-        </g>
-      ))}
+      {LENSES.map((cx, index) => {
+        const outer = index === 0 ? -1 : 1;
+        return (
+          <g key={cx}>
+            <circle cx={cx} cy={EYE_Y} r="6" fill={INK} />
+            <circle cx={cx + 1.9} cy={EYE_Y - 2} r="1.9" fill="#fff" />
+            <circle cx={cx - 1.6} cy={EYE_Y + 2} r="0.9" fill="#fff" />
+            {/* Upper lash line, then the flick. */}
+            <path
+              d={`M${cx - 6} ${EYE_Y - 3}q6 -5 12 0m${outer === 1 ? 0 : -12} 0l${outer * 2.6} -2`}
+              fill="none"
+              stroke={INK}
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </g>
+        );
+      })}
     </g>
   );
 }
 
-/** Each mood only swaps the face and small extras, so the body stays one shared shape. */
+/** Only the face changes with mood; hair, glasses and head stay put. */
 function Face({ mood }: { mood: Mood }) {
-  const stroke = { fill: 'none', stroke: INK, strokeWidth: 3, strokeLinecap: 'round' } as const;
+  const line = { fill: 'none', stroke: INK, strokeLinecap: 'round' } as const;
 
   if (mood === 'happy') {
     return (
       <>
-        <path d="M33 66q9-14 18 0M69 66q9-14 18 0" {...stroke} strokeWidth="3.5" />
-        <path d="M53 72h14q-1 10-7 10t-7-10Z" fill={MOUTH} stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
-        <path className={styles.sparkle} d="M10 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#c9c4b8" />
-        <path className={styles.sparkle} d="M108 8l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#c9c4b8" />
+        <path d="M37 50q7-4 14-2M65 48q7-2 14 2" {...line} strokeWidth="1.8" />
+        {/* Smiling eyes: closed arcs. */}
+        <path d="M38 67q6-7 12 0M66 67q6-7 12 0" {...line} strokeWidth="2.4" />
+        <path d="M51 83q7 9 14 0Z" fill={LIPS} stroke={LIPS} strokeWidth="1.5" strokeLinejoin="round" />
+        <path className={styles.sparkle} d="M8 20l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5Z" fill={GOLD} />
+        <path className={styles.sparkle} d="M106 92l2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill={GOLD} />
       </>
     );
   }
@@ -55,89 +62,85 @@ function Face({ mood }: { mood: Mood }) {
     return (
       <>
         {/* Inner ends raised: worried, not cross. */}
-        <path d="M33 50l10-4M87 50l-10-4" {...stroke} strokeWidth="2.5" />
+        <path d="M37 50q7 0 13-5M66 45q6 5 13 5" {...line} strokeWidth="1.8" />
         <Eyes />
-        {/* A round "gasp" mouth. */}
-        <circle cx="60" cy="78" r="4.5" fill={MOUTH} stroke={INK} strokeWidth="2.5" />
-        <path className={styles.sweat} d="M101 28c5 7 7 10 7 13a7 7 0 0 1-14 0c0-3 2-6 7-13Z" fill="#d6e6f5" stroke="#8aa6c4" strokeWidth="1.5" />
+        {/* A small round gasp. */}
+        <ellipse cx="58" cy="86" rx="3" ry="3.6" fill="#8f3a4f" />
+        <path className={styles.sweat} d="M15 40c4 6 6 8 6 11a6 6 0 0 1-12 0c0-3 2-5 6-11Z" fill="#d6e6f5" stroke="#8aa6c4" strokeWidth="1.3" />
       </>
     );
   }
 
   return (
     <>
+      <path d="M37 50q7-4 14-2M65 48q7-2 14 2" {...line} strokeWidth="1.8" />
       <Eyes blink />
-      {/* A small round "o" mouth. */}
-      <circle cx="60" cy="77" r="2.8" fill={MOUTH} stroke={INK} strokeWidth="2" />
+      {/* A soft closed smile. */}
+      <path d="M53 84q5 4 10 0" fill="none" stroke={LIPS} strokeWidth="2.2" strokeLinecap="round" />
     </>
   );
 }
 
-/** Shimekiri-chan, an original onigiri mascot. The speech bubble carries the meaning. */
+/**
+ * Shimekiri-chan, an original character: sleek dark hair in a high ponytail, round
+ * glasses and gold studs. The speech bubble carries the meaning; the face sets the mood.
+ */
 export function Mascot({ mood, message }: { mood: Mood; message: string }) {
-  // Gradient and clip ids must be unique on the page.
-  const id = useId().replace(/:/g, '');
-  const rice = `${id}-rice`;
-  const sheen = `${id}-sheen`;
-  const clip = `${id}-clip`;
-
   return (
     <div className={styles.mascot} data-mood={mood}>
       <p className={styles.bubble} role="status">
         {message}
       </p>
       <svg className={styles.art} viewBox="-2 0 124 122" aria-hidden="true">
-        <defs>
-          {/* Lit from the top left: bright white fading to a warm grey at the edges. */}
-          <radialGradient id={rice} cx="0.42" cy="0.35" r="0.75">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.6" stopColor="#f6f4ef" />
-            <stop offset="1" stopColor="#dedad0" />
-          </radialGradient>
-          {/* A faint highlight across the seaweed. */}
-          <linearGradient id={sheen} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#ffffff" stopOpacity="0" />
-            <stop offset="0.35" stopColor="#ffffff" stopOpacity="0.14" />
-            <stop offset="0.55" stopColor="#ffffff" stopOpacity="0" />
-          </linearGradient>
-          <clipPath id={clip}>
-            <path d={BODY} />
-          </clipPath>
-        </defs>
-
-        {/* Soft contact shadow in place of feet. */}
-        <ellipse cx="60" cy="112" rx="38" ry="5" fill="#18223a" opacity="0.12" />
-
         <g className={styles.body}>
-          <path d={BODY} fill={`url(#${rice})`} />
-
-          <g clipPath={`url(#${clip})`}>
-            {GRAINS.map(([x, y, angle]) => (
-              <ellipse
-                key={`${x}-${y}`}
-                cx={x}
-                cy={y}
-                rx="3.2"
-                ry="1.6"
-                transform={`rotate(${angle} ${x} ${y})`}
-                fill="#e7e3d9"
-                stroke="#d8d3c7"
-                strokeWidth="0.5"
-              />
-            ))}
-
-            {/* Nori: a dark sheet wrapped around the base, with fine fibre lines. */}
-            <path d="M40 120V93q0-6 6-6h28q6 0 6 6v27Z" fill={NORI} />
-            <path d="M42 96h36M42 102h36" stroke="#262c29" strokeWidth="0.7" />
-            <rect x="40" y="87" width="40" height="40" fill={`url(#${sheen})`} />
+          {/* Ponytail first, so the head sits in front of it. It swings from the tie. */}
+          <g className={styles.ponytail}>
+            <path
+              d="M84 24C98 8 120 14 116 38c-2 16-10 28-6 46-12-8-14-24-12-38 1-10-4-16-14-16Z"
+              fill={HAIR}
+            />
+            <path d="M100 24c8 4 10 14 7 26" fill="none" stroke="#fff" strokeOpacity="0.16" strokeWidth="2.5" strokeLinecap="round" />
           </g>
 
-          {/* Faint cheeks, and a soft edge instead of a hard cartoon outline. */}
-          <circle cx="28" cy="75" r="6.5" fill="#f2c9c4" opacity="0.45" />
-          <circle cx="92" cy="75" r="6.5" fill="#f2c9c4" opacity="0.45" />
-          <path d={BODY} fill="none" stroke="#c9c3b6" strokeWidth="1.5" />
+          {/* Hair behind the face, pulled back smoothly. */}
+          <path d="M20 62C18 34 36 16 58 16s40 18 38 46c0 10-3 18-6 22V58H26v26c-3-4-6-12-6-22Z" fill={HAIR} />
+
+          {/* Ears with gold studs. */}
+          <ellipse cx="25.5" cy="68" rx="4.2" ry="6.2" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
+          <ellipse cx="90.5" cy="68" rx="4.2" ry="6.2" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
+          <circle cx="25.5" cy="76" r="2.1" fill={GOLD} />
+          <circle cx="90.5" cy="76" r="2.1" fill={GOLD} />
+
+          {/* Face. */}
+          <path d="M26 56c0 28 14 48 32 48s32-20 32-48c0-16-14-26-32-26S26 40 26 56Z" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
+
+          {/* Side part on her right, with the fringe swept across to the left temple. */}
+          <path
+            d="M25 60C22 36 38 21 60 21c20 0 33 13 31 33-5-10-11-16-19-18-12 6-28 10-38 14-4 2-7 5-9 10Z"
+            fill={HAIR}
+          />
+          {/* Strands in the fringe and a soft shine on the crown. */}
+          <path d="M70 38C60 43 47 46 37 51M64 34C54 38 42 41 32 47" fill="none" stroke="#45404f" strokeWidth="1" strokeLinecap="round" />
+          <path d="M37 31q9-7 21-8" fill="none" stroke="#fff" strokeOpacity="0.16" strokeWidth="2.5" strokeLinecap="round" />
+
+          {/* Scrunchie at the base of the ponytail, in the app's blue. */}
+          <ellipse cx="88" cy="24" rx="6.5" ry="4.8" transform="rotate(-35 88 24)" fill="var(--blue-700)" />
+          <path d="M84.5 22.5q3.5-3 7 0" fill="none" stroke="#fff" strokeOpacity="0.35" strokeWidth="1.3" strokeLinecap="round" />
+
+          {/* Blush and a tiny nose. */}
+          <ellipse cx="35" cy="79" rx="6" ry="3.4" fill={BLUSH} opacity="0.5" />
+          <ellipse cx="81" cy="79" rx="6" ry="3.4" fill={BLUSH} opacity="0.5" />
+          <path d="M58.5 72q1.8 3-1 4.2" fill="none" stroke="#d29f8c" strokeWidth="1.3" strokeLinecap="round" />
 
           <Face mood={mood} />
+
+          {/* Round glasses over the eyes: thin frames, a faint lens tint. */}
+          <g fill="none" stroke={FRAME} strokeWidth="1.6">
+            {LENSES.map((cx) => (
+              <circle key={cx} cx={cx} cy={EYE_Y} r="11.5" fill="#fff" fillOpacity="0.12" />
+            ))}
+            <path d="M55.5 63q2.5-2.5 5 0M32.5 62l-6-2M83.5 62l6-2" strokeLinecap="round" />
+          </g>
         </g>
       </svg>
     </div>
