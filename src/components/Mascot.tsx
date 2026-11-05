@@ -14,6 +14,8 @@ const MOUTH = '#f4a9bf';
 const TONGUE = '#ee7f9e';
 const NOSE = '#f59ab3';
 const BLUSH = '#f9b8c9';
+const GOLD = '#f2c94c';
+const GOLD_LIGHT = '#fff1b8';
 const GOLD_SPARKLE = '#f7c948';
 const BLUE_SPARKLE = '#a9cdf2';
 
@@ -101,7 +103,7 @@ function Face({ mood, iris }: { mood: Mood; iris: string }) {
       <>
         <Mirrored>
           {/* Worried brows: little slanted dashes. */}
-          <path d="M36 42l11-4.5" fill="none" {...line} strokeWidth="2.4" />
+          <path d="M32.5 45.5l10-4" fill="none" {...line} strokeWidth="2.4" />
           <Eye iris={iris} wide />
         </Mirrored>
         {/* A round "o" of surprise. */}
@@ -167,6 +169,21 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
             <path d="M16 88l-9-2M16 92l-9 1" fill="none" {...line} strokeWidth="1.6" />
           </Mirrored>
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
+
+          {/* Little gold tiara: three peaks with pearl tips, a gem in the app's blue
+              gradient and two pink side gems. */}
+          <g>
+            <path d="M44.5 35L46.5 25.5L52.5 31L60 18.5L67.5 31L73.5 25.5L75.5 35Q60 29.5 44.5 35Z" fill={GOLD} {...line} strokeWidth="1.8" />
+            <path d="M44 35Q60 29.5 76 35L75.6 38.4Q60 33 44.4 38.4Z" fill={GOLD} {...line} strokeWidth="1.8" />
+            <path d="M47.5 33.6Q60 29.4 72.5 33.6" fill="none" stroke={GOLD_LIGHT} strokeWidth="1.1" strokeLinecap="round" />
+            <circle cx="46.5" cy="24.6" r="2" fill="#fff" {...line} strokeWidth="1.3" />
+            <circle cx="73.5" cy="24.6" r="2" fill="#fff" {...line} strokeWidth="1.3" />
+            <circle cx="60" cy="17.2" r="2.3" fill="#fff" {...line} strokeWidth="1.3" />
+            <path d="M60 23.6q3.4 2.6 0 7.2q-3.4-4.6 0-7.2Z" fill={`url(#${iris})`} {...line} strokeWidth="1.3" />
+            <circle cx="59.1" cy="25.8" r="0.8" fill="#fff" />
+            <circle cx="52.6" cy="34.6" r="1.4" fill={NOSE} {...line} strokeWidth="1" />
+            <circle cx="67.4" cy="34.6" r="1.4" fill={NOSE} {...line} strokeWidth="1" />
+          </g>
 
           <Face mood={mood} iris={iris} />
         </g>
