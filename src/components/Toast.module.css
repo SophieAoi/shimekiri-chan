@@ -37,7 +37,7 @@
   padding: 0 var(--space-3);
   border: 0;
   border-radius: var(--radius-pill);
-  background: var(--pink-200);
+  background: var(--indigo-200);
   color: var(--ink);
   font-weight: var(--weight-bold);
   cursor: pointer;

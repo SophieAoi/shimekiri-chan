@@ -45,7 +45,7 @@
    busy week doesn't turn every card yellow and drown out the overdue ones. */
 .item[data-urgency='today']::before,
 .item[data-urgency='soon']::before {
-  background: var(--butter-500);
+  background: var(--sand-500);
 }
 
 .item[data-urgency='overdue'] .due {
@@ -55,7 +55,7 @@
 
 .item[data-urgency='today'] .due,
 .item[data-urgency='soon'] .due {
-  color: var(--butter-800);
+  color: var(--sand-800);
   font-weight: var(--weight-bold);
 }
 
@@ -80,17 +80,17 @@
   border: 12px solid transparent;
   border-radius: 50%;
   background: var(--white) padding-box;
-  box-shadow: inset 0 0 0 2px var(--teal-700);
+  box-shadow: inset 0 0 0 2px var(--blue-700);
   cursor: pointer;
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .check:hover {
-  background-color: var(--teal-50);
+  background-color: var(--blue-50);
 }
 
 .check:checked {
-  background: var(--teal-700)
+  background: var(--blue-700)
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E")
     center / 15px no-repeat padding-box;
   animation: pop 0.25s ease;

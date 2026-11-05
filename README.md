@@ -1,6 +1,6 @@
 # Shimekiri 締切
 
-A cute, minimal assignment and deadline tracker for university students. *Shimekiri*
+A minimal assignment and deadline tracker for university students. *Shimekiri*
 is Japanese for "deadline". Tasks are kept in tabs for each module, sorted by due
 date and grouped by type. Shimekiri-chan, an onigiri mascot, keeps an eye on what's
 coming up.
@@ -104,7 +104,7 @@ docs/                      Build plan and screenshots
 - **Multiple tabs stay in sync.** If Shimekiri is open in two browser tabs, a change
   in one shows up in the other instead of being overwritten.
 - **Accent colours are for decoration only.** All text uses the deep shades, so the
-  pastel palette stays readable.
+  blue palette stays readable.
 
 ## About
 

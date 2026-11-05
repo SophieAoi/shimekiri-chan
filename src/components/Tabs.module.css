@@ -39,23 +39,23 @@
   min-height: 44px;
   padding: 0 14px;
   border: 0;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-soft);
   font-size: 0.9375rem;
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-medium);
   text-align: start;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .tab:hover {
-  background: var(--teal-100);
-  color: var(--teal-800);
+  background: var(--blue-100);
+  color: var(--blue-800);
 }
 
 .tab[aria-selected='true'] {
-  background: var(--teal-700);
+  background: var(--gradient-accent);
   color: var(--white);
 }
 
@@ -99,7 +99,7 @@
   margin-top: var(--space-1);
   padding: 0;
   border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-soft);
   cursor: pointer;
@@ -107,9 +107,9 @@
 }
 
 .add:hover {
-  border-color: var(--pink-300);
-  background: var(--pink-50);
-  color: var(--pink-800);
+  border-color: var(--indigo-300);
+  background: var(--indigo-50);
+  color: var(--indigo-800);
 }
 
 @media (max-width: 599px) {
@@ -153,8 +153,9 @@
   }
 
   .tab[aria-selected='true'] {
-    background: var(--teal-100);
-    color: var(--teal-800);
+    background: var(--white);
+    color: var(--blue-800);
+    box-shadow: var(--shadow-sm), inset 3px 0 0 var(--blue-700);
   }
 
   .label,
@@ -193,21 +194,22 @@
   background: transparent;
   color: var(--ink-soft);
   font-size: 0.9375rem;
-  font-weight: var(--weight-bold);
+  font-weight: var(--weight-medium);
   text-align: start;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
 .groupToggle:hover {
-  background: var(--teal-100);
-  color: var(--teal-800);
+  background: var(--blue-100);
+  color: var(--blue-800);
 }
 
 /* While folded, matches a selected tab, since the open tab lives inside. */
 .groupHeader[data-active='true'] .groupToggle {
-  background: var(--teal-100);
-  color: var(--teal-800);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  color: var(--blue-800);
 }
 
 .groupLabel {

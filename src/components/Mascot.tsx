@@ -26,9 +26,9 @@ function Face({ mood }: { mood: Mood }) {
     return (
       <>
         <path d="M33 66q9-14 18 0M69 66q9-14 18 0" {...stroke} strokeWidth="3.5" />
-        <path d="M53 72h14q-1 10-7 10t-7-10Z" fill="var(--pink-700)" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
-        <path className={styles.sparkle} d="M10 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="var(--pink-300)" />
-        <path className={styles.sparkle} d="M108 8l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="var(--teal-300)" />
+        <path d="M53 72h14q-1 10-7 10t-7-10Z" fill="var(--indigo-700)" stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
+        <path className={styles.sparkle} d="M10 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="var(--indigo-300)" />
+        <path className={styles.sparkle} d="M108 8l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="var(--blue-300)" />
       </>
     );
   }
@@ -40,8 +40,8 @@ function Face({ mood }: { mood: Mood }) {
         <path d="M33 50l10-4M87 50l-10-4" {...stroke} strokeWidth="2.5" />
         <Eyes />
         {/* A round "gasp" mouth. */}
-        <circle cx="60" cy="78" r="4.5" fill="var(--pink-700)" stroke={INK} strokeWidth="2.5" />
-        <path className={styles.sweat} d="M101 28c5 7 7 10 7 13a7 7 0 0 1-14 0c0-3 2-6 7-13Z" fill="var(--teal-300)" stroke="var(--teal-700)" strokeWidth="1.5" />
+        <circle cx="60" cy="78" r="4.5" fill="var(--indigo-700)" stroke={INK} strokeWidth="2.5" />
+        <path className={styles.sweat} d="M101 28c5 7 7 10 7 13a7 7 0 0 1-14 0c0-3 2-6 7-13Z" fill="var(--blue-300)" stroke="var(--blue-700)" strokeWidth="1.5" />
       </>
     );
   }
@@ -50,7 +50,7 @@ function Face({ mood }: { mood: Mood }) {
     <>
       <Eyes blink />
       {/* A small round "o" mouth. */}
-      <circle cx="60" cy="77" r="2.8" fill="var(--pink-700)" stroke={INK} strokeWidth="2" />
+      <circle cx="60" cy="77" r="2.8" fill="var(--indigo-700)" stroke={INK} strokeWidth="2" />
     </>
   );
 }
@@ -64,17 +64,17 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
       </p>
       <svg className={styles.art} viewBox="-2 0 124 122" aria-hidden="true">
         <g className={styles.body}>
-          <ellipse cx="44" cy="111" rx="9" ry="5" fill="var(--pink-300)" stroke={INK} strokeWidth="2.5" />
-          <ellipse cx="76" cy="111" rx="9" ry="5" fill="var(--pink-300)" stroke={INK} strokeWidth="2.5" />
+          <ellipse cx="44" cy="111" rx="9" ry="5" fill="var(--indigo-300)" stroke={INK} strokeWidth="2.5" />
+          <ellipse cx="76" cy="111" rx="9" ry="5" fill="var(--indigo-300)" stroke={INK} strokeWidth="2.5" />
           <path
             d="M60 10c10 0 16 6 22 16l24 42c10 18 0 40-22 40H36C14 108 4 86 14 68l24-42c6-10 12-16 22-16Z"
             fill="#fff"
             stroke={INK}
             strokeWidth="3"
           />
-          <path d="M42 107V88a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v19Z" fill="var(--teal-700)" />
-          <circle cx="28" cy="75" r="7" fill="var(--pink-200)" />
-          <circle cx="92" cy="75" r="7" fill="var(--pink-200)" />
+          <path d="M42 107V88a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v19Z" fill="var(--blue-700)" />
+          <circle cx="28" cy="75" r="7" fill="var(--indigo-200)" />
+          <circle cx="92" cy="75" r="7" fill="var(--indigo-200)" />
           <Face mood={mood} />
         </g>
       </svg>

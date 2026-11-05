@@ -1,5 +1,5 @@
-import '@fontsource-variable/fredoka';
-import '@fontsource-variable/nunito';
+import '@fontsource-variable/playfair-display';
+import '@fontsource-variable/inter';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';

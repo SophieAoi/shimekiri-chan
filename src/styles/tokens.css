@@ -1,42 +1,48 @@
-/* Design tokens. Pastels are used for surfaces; text always uses the deep shades. */
+/* Design tokens. A cool blue palette: soft tints for surfaces, deep shades for text,
+   so every pairing keeps WCAG AA contrast. */
 :root {
   color-scheme: light;
 
-  --ink: #2b3a42;
-  --ink-soft: #52626b;
+  --ink: #18223a;
+  --ink-soft: #4f5b74;
   --white: #ffffff;
-  --paper: #fffdf9;
-  --paper-muted: #f5f3ee;
-  --cream: #fff8ef;
+  --paper: #ffffff;
+  --paper-muted: #f2f5fa;
 
-  --teal-50: #eefaf8;
-  --teal-100: #d5f2ee;
-  --teal-200: #b2e6df;
-  --teal-300: #8fd9d1;
-  --teal-700: #0f6e68;
-  --teal-800: #0b5450;
+  /* Page background: a quiet top-to-bottom blue wash. */
+  --gradient-page: linear-gradient(170deg, #d6e3f7 0%, #e9f0fb 32%, #f6f8fc 70%);
+  /* Primary buttons and the selected tab. */
+  --gradient-accent: linear-gradient(135deg, #2f63c0 0%, #1b3f86 100%);
+  --gradient-accent-hover: linear-gradient(135deg, #2756a9 0%, #15336f 100%);
 
-  --pink-50: #fff3f6;
-  --pink-100: #ffe1e9;
-  --pink-200: #ffc9d7;
-  --pink-300: #ffb0c4;
-  --pink-700: #b02a5b;
-  --pink-800: #8a1f47;
+  --blue-50: #f0f5fd;
+  --blue-100: #dfe9f9;
+  --blue-200: #c4d6f2;
+  --blue-300: #9fbbe8;
+  --blue-700: #1f4f9e;
+  --blue-800: #173c7a;
 
-  --butter-50: #fff9e8;
-  --butter-100: #fff0c7;
-  --butter-500: #e8b23a;
-  --butter-800: #6e4700;
+  --indigo-50: #f4f3fd;
+  --indigo-100: #e6e4f8;
+  --indigo-200: #d0cbf1;
+  --indigo-300: #b4ace5;
+  --indigo-700: #4a3ea6;
+  --indigo-800: #382e86;
 
-  --red-50: #fff0ee;
-  --red-100: #fddcd8;
+  --sand-50: #fbf8f1;
+  --sand-100: #f1e9d6;
+  --sand-500: #c49a45;
+  --sand-800: #634513;
+
+  --red-50: #fdf1f0;
+  --red-100: #fadcd9;
   --red-700: #b3261e;
 
-  --green-100: #d8f3dc;
-  --green-800: #1e6b34;
+  --green-100: #dcefe3;
+  --green-800: #1d6236;
 
-  --font-body: 'Nunito Variable', 'Hiragino Maru Gothic ProN', system-ui, sans-serif;
-  --font-display: 'Fredoka Variable', 'Nunito Variable', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Hiragino Sans', system-ui, sans-serif;
+  --font-display: 'Playfair Display Variable', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -47,19 +53,19 @@
   --space-7: 48px;
 
   /* Hairlines do the separating; shadows are reserved for things that float. */
-  --line: #ebe6dd;
-  --line-strong: #d9d3c8;
+  --line: #e2e7f0;
+  --line-strong: #cbd3e1;
 
-  --radius-sm: 10px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px rgb(43 58 66 / 6%);
-  --shadow-md: 0 1px 3px rgb(43 58 66 / 5%), 0 8px 24px rgb(43 58 66 / 6%);
-  --shadow-lg: 0 12px 32px rgb(43 58 66 / 18%);
+  --shadow-sm: 0 1px 2px rgb(24 34 58 / 6%);
+  --shadow-md: 0 1px 3px rgb(24 34 58 / 5%), 0 10px 30px rgb(31 79 158 / 8%);
+  --shadow-lg: 0 16px 40px rgb(24 34 58 / 20%);
 
-  --weight-regular: 500;
-  --weight-medium: 600;
-  --weight-bold: 700;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
 }
