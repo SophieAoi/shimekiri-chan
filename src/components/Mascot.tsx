@@ -3,13 +3,12 @@ import type { Mood } from '../types';
 import styles from './Mascot.module.css';
 
 /**
- * Palette for Shimekiri-chan: white fur, bold navy outlines and soft pink shading,
+ * Palette for Shimekiri-chan: white fur, bold navy outlines and pink accents,
  * in the style of a jewel-themed kawaii mascot. Kept here because nothing else in
  * the app uses it.
  */
 const LINE = '#1f4a8f';
 const FUR = '#ffffff';
-const SHADE = '#fbe1e8';
 const INNER_EAR = '#f7bfd0';
 const MOUTH = '#f4a9bf';
 const TONGUE = '#ee7f9e';
@@ -127,16 +126,13 @@ function Face({ mood, iris }: { mood: Mood; iris: string }) {
 }
 
 /**
- * Shimekiri-chan, an original cat mascot in a jewel-kawaii style: a wide white face
- * with pink shading, bold navy outlines and big wide-set gem eyes. The speech bubble
+ * Shimekiri-chan, an original cat mascot in a jewel-kawaii style: a wide, pure white
+ * face, bold navy outlines and big wide-set gem eyes. The speech bubble
  * carries the meaning; the face sets the mood.
  */
 export function Mascot({ mood, message }: { mood: Mood; message: string }) {
-  // The clip id must be unique on the page.
-  // Clip and gradient ids must be unique on the page.
-  const base = useId().replace(/:/g, '');
-  const headClip = `${base}-head`;
-  const iris = `${base}-iris`;
+  // The gradient id must be unique on the page.
+  const iris = `${useId().replace(/:/g, '')}-iris`;
 
   return (
     <div className={styles.mascot} data-mood={mood}>
@@ -153,26 +149,17 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
             <stop offset="0.78" stopColor="#6a7fd6" />
             <stop offset="1" stopColor="#9b8be0" />
           </linearGradient>
-          <clipPath id={headClip}>
-            <path d={HEAD} />
-          </clipPath>
         </defs>
 
         <g className={styles.body}>
-          {/* Ears: white with pink insides and pink shading along the back edge. */}
+          {/* Ears: white with pink insides. */}
           <Mirrored>
             <path d="M18 58L14 18q0-6 6-4l28 22Z" fill={FUR} {...line} strokeWidth="2.6" />
             <path d="M22.5 50.5l-2.5-28 22 14.5Z" fill={INNER_EAR} />
-            <path d="M15.5 32l2 24 4-2Z" fill={SHADE} />
           </Mirrored>
 
-          {/* Head, with soft pink shading on the lower edge and down one side. */}
-          <path d={HEAD} fill={FUR} />
-          <g clipPath={`url(#${headClip})`}>
-            <ellipse cx="60" cy="124" rx="60" ry="20" fill={SHADE} />
-            <ellipse cx="120" cy="78" rx="16" ry="34" fill={SHADE} />
-          </g>
-          <path d={HEAD} fill="none" {...line} strokeWidth="2.6" />
+          {/* Head: pure white fur. */}
+          <path d={HEAD} fill={FUR} {...line} strokeWidth="2.6" />
 
           {/* Blush, a tiny nose and two short whiskers each side. */}
           <Mirrored>
