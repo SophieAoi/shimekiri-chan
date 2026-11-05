@@ -228,11 +228,37 @@
 }
 
 .groupLabel {
-  flex: 1;
+  min-width: 0;
 }
 
-.groupToggle .badge {
-  margin-inline-start: 0;
+.groupToggle .chevron {
+  margin-inline-start: -4px;
+}
+
+/* "Add module" row under the module tabs, lined up with them but quieter. */
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  text-align: start;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.addRow:hover {
+  background: var(--blue-100);
+  color: var(--blue-800);
+}
+
+.addRow:hover .icon {
+  color: inherit;
 }
 
 .chevron {

@@ -144,14 +144,12 @@ export function Tabs(props: TabsProps) {
             >
               <Layers className={styles.icon} size={18} strokeWidth={1.75} aria-hidden="true" />
               <span className={styles.groupLabel}>Modules</span>
+              {/* Sits beside the label, so the badge lines up with the tabs' badges. */}
+              <ChevronDown className={styles.chevron} size={16} aria-hidden="true" />
               {/* Folded modules still report their total, so a deadline can't hide. */}
               {modulesCollapsed && (
                 <CountBadge id="module-tabs-count" openCount={sum('openCount')} urgentCount={sum('urgentCount')} />
               )}
-              <ChevronDown className={styles.chevron} size={18} aria-hidden="true" />
-            </button>
-            <button className="icon-btn" type="button" onClick={onAddModule} aria-label="Add module" title="Add module">
-              <Plus size={18} aria-hidden="true" />
             </button>
           </div>
         )}
@@ -167,6 +165,14 @@ export function Tabs(props: TabsProps) {
           >
             {modules.map(renderTab)}
           </div>
+        )}
+
+        {/* Outside the tablist, which may only hold tabs. Shown even while folded. */}
+        {vertical && (
+          <button className={styles.addRow} type="button" onClick={onAddModule}>
+            <Plus className={styles.icon} size={18} strokeWidth={1.75} aria-hidden="true" />
+            Add module
+          </button>
         )}
       </div>
 
