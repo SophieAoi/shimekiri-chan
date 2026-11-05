@@ -1,149 +1,141 @@
+import { useId } from 'react';
 import type { Mood } from '../types';
 import styles from './Mascot.module.css';
 
+/** Near-black for the face, like the nori. */
+const INK = '#1f1f1f';
+const NORI = '#1c211f';
+const MOUTH = '#3a2a2a';
+
+/** The rice ball's outline: a rounded triangle. Shared by the fill, the nori clip and the edge. */
+const BODY = 'M60 10c10 0 16 6 22 16l24 42c10 18 0 40-22 40H36C14 108 4 86 14 68l24-42c6-10 12-16 22-16Z';
+
 /**
- * Palette for Shimekiri-chan: flat fills, one outline colour, no gradients, so she
- * reads clearly at around 64px. Kept here because nothing else in the app uses it.
+ * Rice grains scattered over the body: [x, y, angle]. Fixed rather than random so the
+ * drawing is identical on every render. The face area is left mostly clear.
  */
-const LINE = '#3b2a2e';
-const SKIN = '#fde6d2';
-const HAIR = '#7a4a32';
-const HIGHLIGHT = '#b98058';
-const TEAL = '#5ec4b6';
-const TEAL_DEEP = '#2f8f84';
-const PINK = '#f7a8c0';
-const PINK_DEEP = '#e0708f';
-const CREAM = '#fff8ec';
-const MOUTH = '#8a3550';
+const GRAINS: readonly (readonly [number, number, number])[] = [
+  [58, 20, 20], [50, 30, -30], [66, 28, 45], [44, 40, 10], [74, 38, -20], [59, 38, 70],
+  [36, 52, -45], [84, 50, 30], [28, 64, 60], [92, 62, -60], [22, 78, 15], [98, 78, -10],
+  [20, 92, -35], [100, 92, 40], [30, 100, 70], [90, 100, -70], [52, 48, -15], [68, 47, 25],
+  [33, 86, 5], [87, 86, -5], [26, 72, -20],
+];
 
-const outline = { stroke: LINE, strokeWidth: 2.5, strokeLinejoin: 'round', strokeLinecap: 'round' } as const;
-
-/** Four-point sparkle centred on (x, y). */
-function Sparkle({ x, y, size, fill }: { x: number; y: number; size: number; fill: string }) {
-  const s = size;
-  const t = size * 0.28;
+/** Big glossy eyes: a dark circle with two white highlights. */
+function Eyes({ blink = false }: { blink?: boolean }) {
   return (
-    <path
-      className={styles.sparkle}
-      d={`M${x} ${y - s}L${x + t} ${y - t}L${x + s} ${y}L${x + t} ${y + t}L${x} ${y + s}L${x - t} ${y + t}L${x - s} ${y}L${x - t} ${y - t}Z`}
-      fill={fill}
-      stroke={LINE}
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
-  );
-}
-
-/** One big open eye: white, teal iris, pupil, a highlight and a thick lash line. */
-function Eye({ cx, side, wide = false }: { cx: number; side: -1 | 1; wide?: boolean }) {
-  // side: -1 for the eye on the viewer's left, so the lash flicks point outwards.
-  const ry = wide ? 9.5 : 8;
-  const iris = wide ? 4 : 5.2;
-  return (
-    <g>
-      <ellipse cx={cx} cy="64" rx="7" ry={ry} fill="#fff" {...outline} strokeWidth="2" />
-      <circle cx={cx} cy="65" r={iris} fill={TEAL_DEEP} />
-      <circle cx={cx} cy="65" r={iris * 0.5} fill={LINE} />
-      <circle cx={cx + 1.8} cy="62.6" r="1.8" fill="#fff" />
-      {/* Lash line across the top, then two flicks at the outer corner. */}
-      <path d={`M${cx - 7.5} ${64 - ry * 0.55}Q${cx} ${64 - ry - 3} ${cx + 7.5} ${64 - ry * 0.55}`} fill="none" {...outline} strokeWidth="3" />
-      <path
-        d={`M${cx + side * 7} ${64 - ry * 0.6}l${side * 3.5} -2.5M${cx + side * 5} ${64 - ry * 0.95}l${side * 2.5} -3`}
-        fill="none"
-        {...outline}
-        strokeWidth="2"
-      />
+    <g className={blink ? styles.blink : undefined}>
+      {[42, 78].map((cx) => (
+        <g key={cx}>
+          <circle cx={cx} cy="63" r="8.5" fill={INK} />
+          <circle cx={cx + 2.6} cy="59" r="3.2" fill="#fff" />
+          <circle cx={cx - 3} cy="67.5" r="1.5" fill="#fff" />
+        </g>
+      ))}
     </g>
   );
 }
 
-/** Only the brows, eyes, mouth and extras change between expressions. */
+/** Each mood only swaps the face and small extras, so the body stays one shared shape. */
 function Face({ mood }: { mood: Mood }) {
+  const stroke = { fill: 'none', stroke: INK, strokeWidth: 3, strokeLinecap: 'round' } as const;
+
   if (mood === 'happy') {
-    // Celebrating: a wink, a big grin and sparkles.
     return (
       <>
-        <path d="M37 50q7-4 14-1M65 49q7-3 14 1" fill="none" {...outline} />
-        <Eye cx={45} side={-1} />
-        {/* Winking eye: a closed, upturned arc with a lash flick. */}
-        <path d="M64 66q7-7 14 0M78 66l3-2" fill="none" {...outline} strokeWidth="3" />
-        <path d="M48 81Q58 84 68 81Q66.5 95 58 95Q49.5 95 48 81Z" fill={MOUTH} {...outline} />
-        <path d="M50 82.4Q58 84.8 66 82.4L65.4 85.6Q58 87.4 50.6 85.6Z" fill="#fff" />
-        <ellipse cx="58" cy="91.5" rx="4.5" ry="2.4" fill={PINK_DEEP} />
-        <Sparkle x={12} y={24} size={7} fill={PINK} />
-        <Sparkle x={106} y={30} size={6} fill={TEAL} />
-        <Sparkle x={104} y={98} size={5} fill={CREAM} />
+        <path d="M33 66q9-14 18 0M69 66q9-14 18 0" {...stroke} strokeWidth="3.5" />
+        <path d="M53 72h14q-1 10-7 10t-7-10Z" fill={MOUTH} stroke={INK} strokeWidth="2.5" strokeLinejoin="round" />
+        <path className={styles.sparkle} d="M10 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#c9c4b8" />
+        <path className={styles.sparkle} d="M108 8l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#c9c4b8" />
       </>
     );
   }
 
   if (mood === 'nervous') {
-    // Stressed: brows up in the middle, wide eyes, a gritted "ugh" and a sweat drop.
     return (
       <>
-        <path d="M37 48q8 1 14-4M65 44q6 5 14 4" fill="none" {...outline} />
-        <Eye cx={45} side={-1} wide />
-        <Eye cx={71} side={1} wide />
-        <rect x="50" y="83" width="16" height="7.5" rx="3.75" fill="#fff" {...outline} />
-        <path d="M50.5 86.75h15M54.5 83.5v6.5M58 83.5v6.5M61.5 83.5v6.5" fill="none" stroke={LINE} strokeWidth="1.2" />
-        <path className={styles.sweat} d="M97 40c4.5 6.5 6.5 9 6.5 12a6.5 6.5 0 0 1-13 0c0-3 2-5.5 6.5-12Z" fill="#c9f0ea" {...outline} strokeWidth="2" />
+        {/* Inner ends raised: worried, not cross. */}
+        <path d="M33 50l10-4M87 50l-10-4" {...stroke} strokeWidth="2.5" />
+        <Eyes />
+        {/* A round "gasp" mouth. */}
+        <circle cx="60" cy="78" r="4.5" fill={MOUTH} stroke={INK} strokeWidth="2.5" />
+        <path className={styles.sweat} d="M101 28c5 7 7 10 7 13a7 7 0 0 1-14 0c0-3 2-6 7-13Z" fill="#d6e6f5" stroke="#8aa6c4" strokeWidth="1.5" />
       </>
     );
   }
 
-  // Relaxed: one brow raised, a lopsided smirk, a single sparkle.
   return (
     <>
-      <path d="M37 50q7-4 14-1M65 45q7-5 14-1" fill="none" {...outline} />
-      <g className={styles.blink}>
-        <Eye cx={45} side={-1} />
-        <Eye cx={71} side={1} />
-      </g>
-      <path d="M51 85q7 4 15-3" fill="none" {...outline} strokeWidth="2.8" />
-      <path d="M66 82l2.2-1.4" fill="none" {...outline} strokeWidth="2.2" />
-      <Sparkle x={104} y={28} size={5.5} fill={PINK} />
+      <Eyes blink />
+      {/* A small round "o" mouth. */}
+      <circle cx="60" cy="77" r="2.8" fill={MOUTH} stroke={INK} strokeWidth="2" />
     </>
   );
 }
 
-/**
- * Shimekiri-chan, an original Y2K-inspired mascot: big lashed eyes, rosy cheeks and
- * voluminous brown hair with a butterfly clip. Flat colours and thick outlines keep
- * her readable at small sizes. The speech bubble carries the meaning; the face sets
- * the mood.
- */
+/** Shimekiri-chan, an original onigiri mascot. The speech bubble carries the meaning. */
 export function Mascot({ mood, message }: { mood: Mood; message: string }) {
+  // Gradient and clip ids must be unique on the page.
+  const id = useId().replace(/:/g, '');
+  const rice = `${id}-rice`;
+  const sheen = `${id}-sheen`;
+  const clip = `${id}-clip`;
+
   return (
     <div className={styles.mascot} data-mood={mood}>
       <p className={styles.bubble} role="status">
         {message}
       </p>
       <svg className={styles.art} viewBox="-2 0 124 122" aria-hidden="true">
+        <defs>
+          {/* Lit from the top left: bright white fading to a warm grey at the edges. */}
+          <radialGradient id={rice} cx="0.42" cy="0.35" r="0.75">
+            <stop offset="0" stopColor="#ffffff" />
+            <stop offset="0.6" stopColor="#f6f4ef" />
+            <stop offset="1" stopColor="#dedad0" />
+          </radialGradient>
+          {/* A faint highlight across the seaweed. */}
+          <linearGradient id={sheen} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="0.35" stopColor="#ffffff" stopOpacity="0.14" />
+            <stop offset="0.55" stopColor="#ffffff" stopOpacity="0" />
+          </linearGradient>
+          <clipPath id={clip}>
+            <path d={BODY} />
+          </clipPath>
+        </defs>
+
+        {/* Soft contact shadow in place of feet. */}
+        <ellipse cx="60" cy="112" rx="38" ry="5" fill="#18223a" opacity="0.12" />
+
         <g className={styles.body}>
-          {/* Big, rounded hair behind the face, flicking out at the ends. */}
-          <path d="M12 64C4 36 22 6 58 6s54 30 46 58c4 16 2 30 12 38-10 4-22 0-28-8l-4-24H32l-4 24c-6 8-18 12-28 8 10-8 8-22 12-38Z" fill={HAIR} {...outline} />
-          <path d="M16 68c-3 12-3 24-8 32 6 0 10-2 13-6-2-8-4-16-5-26ZM100 68c3 12 3 24 8 32-6 0-10-2-13-6 2-8 4-16 5-26Z" fill={HIGHLIGHT} />
+          <path d={BODY} fill={`url(#${rice})`} />
 
-          {/* Face. */}
-          <path d="M28 58c0-20 14-30 30-30s30 10 30 30c0 24-14 42-30 42S28 82 28 58Z" fill={SKIN} {...outline} />
+          <g clipPath={`url(#${clip})`}>
+            {GRAINS.map(([x, y, angle]) => (
+              <ellipse
+                key={`${x}-${y}`}
+                cx={x}
+                cy={y}
+                rx="3.2"
+                ry="1.6"
+                transform={`rotate(${angle} ${x} ${y})`}
+                fill="#e7e3d9"
+                stroke="#d8d3c7"
+                strokeWidth="0.5"
+              />
+            ))}
 
-          {/* Swept fringe with chunky lighter highlights. */}
-          <path d="M24 62C20 34 36 18 60 18s38 18 32 44c-4-12-12-22-24-24-2 6-8 9-14 8-8-1-16 2-22 8-4 3-6 6-8 8Z" fill={HAIR} {...outline} />
-          <path d="M42 25c9-5 21-5 30-1-9 0-18 3-24 8ZM80 31c8 6 11 15 11 24-3-8-7-15-13-20Z" fill={HIGHLIGHT} />
-
-          {/* Butterfly clip: the Y2K touch. */}
-          <g transform="rotate(20 82 26)">
-            <ellipse cx="77" cy="24" rx="5" ry="6" fill={TEAL} {...outline} strokeWidth="1.8" />
-            <ellipse cx="87" cy="24" rx="5" ry="6" fill={TEAL} {...outline} strokeWidth="1.8" />
-            <ellipse cx="78" cy="31" rx="3.4" ry="3.6" fill={PINK} {...outline} strokeWidth="1.6" />
-            <ellipse cx="86" cy="31" rx="3.4" ry="3.6" fill={PINK} {...outline} strokeWidth="1.6" />
-            <rect x="80.6" y="20" width="2.8" height="14" rx="1.4" fill={LINE} />
+            {/* Nori: a dark sheet wrapped around the base, with fine fibre lines. */}
+            <path d="M40 120V93q0-6 6-6h28q6 0 6 6v27Z" fill={NORI} />
+            <path d="M42 96h36M42 102h36" stroke="#262c29" strokeWidth="0.7" />
+            <rect x="40" y="87" width="40" height="40" fill={`url(#${sheen})`} />
           </g>
 
-          {/* Rosy cheeks and a small nose. */}
-          <ellipse cx="38" cy="77" rx="6" ry="3.6" fill={PINK} />
-          <ellipse cx="78" cy="77" rx="6" ry="3.6" fill={PINK} />
-          <path d="M57 73q2 2 4 0" fill="none" {...outline} strokeWidth="1.8" />
+          {/* Faint cheeks, and a soft edge instead of a hard cartoon outline. */}
+          <circle cx="28" cy="75" r="6.5" fill="#f2c9c4" opacity="0.45" />
+          <circle cx="92" cy="75" r="6.5" fill="#f2c9c4" opacity="0.45" />
+          <path d={BODY} fill="none" stroke="#c9c3b6" strokeWidth="1.5" />
 
           <Face mood={mood} />
         </g>

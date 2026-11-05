@@ -2,7 +2,7 @@
 
 A minimal assignment and deadline tracker for university students. *Shimekiri*
 is Japanese for "deadline". Tasks are kept in tabs for each module, sorted by due
-date and grouped by type. Shimekiri-chan, a Y2K-style mascot with a butterfly clip, keeps an eye on what's
+date and grouped by type. Shimekiri-chan, an onigiri mascot, keeps an eye on what's
 coming up.
 
 **Try it:** https://sophieaoi.github.io/shimekiri-chan/
