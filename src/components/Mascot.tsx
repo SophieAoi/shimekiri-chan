@@ -15,8 +15,6 @@ const MOUTH = '#f4a9bf';
 const TONGUE = '#ee7f9e';
 const NOSE = '#f59ab3';
 const BLUSH = '#f9b8c9';
-const IRIS = '#3f8fd8';
-const IRIS_DEEP = '#1f5fae';
 const GOLD_SPARKLE = '#f7c948';
 const BLUE_SPARKLE = '#a9cdf2';
 
@@ -51,17 +49,15 @@ function Twinkle({ x, y, size, fill = '#fff', className }: { x: number; y: numbe
 }
 
 /**
- * Big, nearly round gem eye: one solid colour with no separate pupil, a thick outline,
+ * Big, nearly round gem eye: the app's blue gradient with no separate pupil, a thick outline,
  * a white rim of light along the lower edge, two shine dots and two curled lashes.
  */
-function Eye({ wide = false }: { wide?: boolean }) {
+function Eye({ iris, wide = false }: { iris: string; wide?: boolean }) {
   // Startled eyes open a little taller.
   const ry = wide ? 14 : 13;
   return (
     <g>
-      <ellipse cx="38" cy="66" rx="11.5" ry={ry} fill={IRIS} />
-      {/* Slightly deeper colour across the top of the gem. */}
-      <path d={`M26.5 63a11.5 ${ry} 0 0 1 23 0q-11.5-6-23 0Z`} fill={IRIS_DEEP} opacity="0.55" />
+      <ellipse cx="38" cy="66" rx="11.5" ry={ry} fill={`url(#${iris})`} />
       {/* Rim of light along the lower edge. */}
       <path d={`M27.6 ${66 + ry * 0.2}Q29.4 ${66 + ry * 0.85} 38.5 ${66 + ry - 1.4}Q31.8 ${66 + ry * 0.7} 30.6 ${66 + ry * 0.2}Z`} fill="#fff" />
       <circle cx="43" cy={66 - ry * 0.5} r="3.6" fill="#fff" />
@@ -84,12 +80,12 @@ function ClosedEye() {
 }
 
 /** Eyes, mouth and extras per mood; the head and ears never change. */
-function Face({ mood }: { mood: Mood }) {
+function Face({ mood, iris }: { mood: Mood; iris: string }) {
   if (mood === 'happy') {
     // Celebrating: a wink, a wide open mouth and sparkles.
     return (
       <>
-        <Eye />
+        <Eye iris={iris} />
         <g transform={MIRROR}>
           <ClosedEye />
         </g>
@@ -107,7 +103,7 @@ function Face({ mood }: { mood: Mood }) {
         <Mirrored>
           {/* Worried brows: little slanted dashes. */}
           <path d="M36 42l11-4.5" fill="none" {...line} strokeWidth="2.4" />
-          <Eye wide />
+          <Eye iris={iris} wide />
         </Mirrored>
         {/* A round "o" of surprise. */}
         <ellipse cx="60" cy="89" rx="4" ry="4.8" fill={MOUTH} {...line} strokeWidth="2.2" />
@@ -121,7 +117,7 @@ function Face({ mood }: { mood: Mood }) {
     <>
       <g className={styles.blink}>
         <Mirrored>
-          <Eye />
+          <Eye iris={iris} />
         </Mirrored>
       </g>
       <path d="M51.5 84q4.25 2.5 8.5 0q4.25 2.5 8.5 0q-1.5 10-8.5 10t-8.5-10Z" fill={MOUTH} {...line} strokeWidth="2.2" />
@@ -137,7 +133,10 @@ function Face({ mood }: { mood: Mood }) {
  */
 export function Mascot({ mood, message }: { mood: Mood; message: string }) {
   // The clip id must be unique on the page.
-  const headClip = `${useId().replace(/:/g, '')}-head`;
+  // Clip and gradient ids must be unique on the page.
+  const base = useId().replace(/:/g, '');
+  const headClip = `${base}-head`;
+  const iris = `${base}-iris`;
 
   return (
     <div className={styles.mascot} data-mood={mood}>
@@ -146,6 +145,14 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
       </p>
       <svg className={styles.art} viewBox="-2 0 124 122" aria-hidden="true">
         <defs>
+          {/* The app's own blues: button navy and royal blue at the top, fading into
+              the periwinkle and lavender of the card's accent strip. */}
+          <linearGradient id={iris} x1="0" y1="0" x2="0.35" y2="1">
+            <stop offset="0" stopColor="#1b3f86" />
+            <stop offset="0.4" stopColor="#2f63c0" />
+            <stop offset="0.78" stopColor="#6a7fd6" />
+            <stop offset="1" stopColor="#9b8be0" />
+          </linearGradient>
           <clipPath id={headClip}>
             <path d={HEAD} />
           </clipPath>
@@ -174,7 +181,7 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
           </Mirrored>
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
 
-          <Face mood={mood} />
+          <Face mood={mood} iris={iris} />
         </g>
       </svg>
     </div>
