@@ -2,8 +2,8 @@
 
 A minimal assignment and deadline tracker for university students. *Shimekiri*
 is Japanese for "deadline". Tasks are kept in tabs for each module, sorted by due
-date and grouped by type. Shimekiri-chan, a jewel-eyed cat mascot, keeps an eye on what's
-coming up.
+date and grouped by type, and an Upcoming calendar shows every deadline at once.
+Shimekiri-chan, a jewel-eyed cat, keeps an eye on what's coming up.
 
 **Try it:** https://sophieaoi.github.io/shimekiri-chan/
 
@@ -11,30 +11,41 @@ coming up.
 
 ## Features
 
-- **Tabs:** a General tab, one tab per module, and an Upcoming tab with a month
-  calendar of every deadline across all tabs. Pick a day to see its tasks, and Add task
-  fills in that date. Overdue work is listed above the calendar so it can't hide in an
-  earlier month. You can add, rename and delete module tabs, and fold them
-  away under Modules. Each tab shows how many tasks are left: green normally, red
-  when something is urgent.
+- **Tabs for every module:** a General tab plus one tab per module. Add, rename and
+  delete modules, and fold the list away under Modules. Each tab shows how many tasks
+  are left: green normally, red when something is urgent.
+- **Upcoming calendar:** a month view of every unfinished task across all tabs. Each
+  day shows its tasks as coloured chips (dots on phones). Pick a day to list its
+  tasks, and Add task fills in that date. Overdue work is listed above the calendar
+  so it can't hide in an earlier month.
 - **Task types:** Exam, Homework and Coursework, each with its own coloured tag and
-  icon. Each tab groups tasks into collapsible sections by type, with a filter to show
-  one type at a time.
+  icon. Tabs group tasks into collapsible sections by type, with a filter to show one
+  type at a time.
 - **Deadlines at a glance:** tasks sort by due date automatically. Overdue tasks and
   tasks due within 3 days are highlighted in colour and in words ("Overdue by 2 days",
   "Due tomorrow"). A collapsed section still shows how many urgent tasks it holds.
 - **Quick actions:** complete a task with one tap, and it moves into a collapsed
   Completed section at the bottom of the tab. Delete with one tap. Both can be undone
   from the toast that appears.
-- **Shimekiri-chan:** relaxed when nothing is close, nervous when deadlines approach,
-  happy for a moment whenever you finish something.
+- **Shimekiri-chan:** a white cat with gem-blue eyes and a diamond stud. She's relaxed
+  when nothing is close, nervous when deadlines approach, and winks for a moment
+  whenever you finish something.
 - **Works offline and keeps your data:** everything is saved in your browser's
   localStorage. Nothing is sent anywhere.
-- **Accessible:** keyboard-friendly tabs and dialogs, 44px touch targets, WCAG AA
-  contrast checked with axe, and support for reduced motion.
+- **Accessible:** keyboard-friendly tabs, calendar and dialogs, 44px touch targets,
+  WCAG AA contrast checked with axe, and support for reduced motion.
 
 Each task has a title, type, due date, optional notes, optional weighting (%) and a
 done status.
+
+![The Upcoming calendar on desktop and on a phone, with an overdue task listed above the month](docs/screenshots/calendar.png)
+
+### Good to know
+
+- **Your tasks live in the browser you use.** Tasks added on your laptop won't appear
+  on your phone, and clearing your browser data clears your tasks.
+- **Keyboard shortcuts in the calendar:** arrow keys move between days, Home and End
+  jump to the start or end of the week, and Page Up and Page Down change month.
 
 ## Getting started
 
@@ -87,8 +98,9 @@ src/
   data/seed.ts             Modules created on first run
   lib/                     Pure logic, no React: dates, sorting, urgency, mood, storage, validation
   state/                   Reducer and TrackerContext (actions, persistence, undo toasts, mood)
-  hooks/                   useToday (keeps "today" fresh), usePrefs (open tab, collapsed sections)
-  components/              UI: Mascot, Tabs, panels, task sections and rows, dialogs, toast
+  hooks/                   useToday (keeps "today" fresh), usePrefs (open tab, folded sections),
+                           useMediaQuery (sidebar or tab row)
+  components/              UI: Mascot, Tabs, Calendar, panels, task sections and rows, dialogs, toast
   styles/                  Colour, spacing and font tokens plus shared base styles
 e2e/                       Playwright browser tests
 docs/                      Build plan and screenshots
@@ -105,7 +117,10 @@ docs/                      Build plan and screenshots
 - **Multiple tabs stay in sync.** If Shimekiri is open in two browser tabs, a change
   in one shows up in the other instead of being overwritten.
 - **Accent colours are for decoration only.** All text uses the deep shades, so the
-  blue palette stays readable.
+  blue gradient palette stays readable.
+- **Typography:** Great Vibes for the wordmark, Playfair Display for headings and tab
+  names, and Lora for body text. All three are bundled, so the app looks the same on
+  every device.
 
 ## About
 
