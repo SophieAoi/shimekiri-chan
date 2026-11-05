@@ -50,23 +50,27 @@ function Twinkle({ x, y, size, fill = '#fff', className }: { x: number; y: numbe
   );
 }
 
-/** Big, wide-set jewel eye: a flat two-tone iris, a crescent shine and curled lashes. */
+/**
+ * Big oval gem eye: one solid colour with no separate pupil, a thick outline, a white
+ * rim of light along the lower edge, two shine dots and two curled lashes. Tilted so
+ * the top leans in towards the nose.
+ */
 function Eye({ wide = false }: { wide?: boolean }) {
-  const pupil = wide ? { rx: 3, ry: 4 } : { rx: 4.6, ry: 6.4 };
+  // Startled eyes open a little taller.
+  const ry = wide ? 15 : 14;
   return (
-    <>
-      {/* Flat two-tone iris: bright gem colour, a deeper band across the top. */}
-      <ellipse cx="38" cy="66" rx="12" ry="13" fill={IRIS} />
-      <path d="M26 64a12 13 0 0 1 24 0q-12-5-24 0Z" fill={IRIS_DEEP} />
-      <ellipse cx="39.5" cy="68" {...pupil} fill="#16305c" />
-      {/* Big crescent shine on one side, a dot and a twinkle on the other. */}
-      <path d="M32.5 57q-5 9.5 0 19q.6-10.5 7.5-15.5q-3.5-4.4-7.5-3.5Z" fill="#fff" />
-      <circle cx="44.5" cy="73" r="1.9" fill="#fff" />
-      <Twinkle x={44} y={59} size={3.2} />
-      <ellipse cx="38" cy="66" rx="12" ry="13" fill="none" {...line} strokeWidth="2.8" />
-      {/* Three curled lashes at the outer corner. */}
-      <path d="M27.2 60q-5.5-.6-8-4.3M28.8 56.2q-5-1.8-6.2-6.8M32.3 53.4q-3.8-3-3.8-8" fill="none" {...line} strokeWidth="2.2" />
-    </>
+    <g transform="rotate(12 38 66)">
+      <ellipse cx="38" cy="66" rx="10.5" ry={ry} fill={IRIS} />
+      {/* Slightly deeper colour across the top of the gem. */}
+      <path d={`M27.5 63a10.5 ${ry} 0 0 1 21 0q-10.5-6-21 0Z`} fill={IRIS_DEEP} opacity="0.55" />
+      {/* Rim of light along the lower edge. */}
+      <path d={`M28.6 ${66 + ry * 0.2}Q30.2 ${66 + ry * 0.85} 38.5 ${66 + ry - 1.4}Q32.6 ${66 + ry * 0.7} 31.6 ${66 + ry * 0.2}Z`} fill="#fff" />
+      <circle cx="42" cy={66 - ry * 0.55} r="3.6" fill="#fff" />
+      <circle cx="44" cy={66 - ry * 0.12} r="1.9" fill="#fff" />
+      <ellipse cx="38" cy="66" rx="10.5" ry={ry} fill="none" {...line} strokeWidth="3" />
+      {/* Two curled lashes off the top outer edge. */}
+      <path d="M29.5 56q-6-1.5-7.5-8M33 53q-4.5-3-4.5-9.5" fill="none" {...line} strokeWidth="2.4" />
+    </g>
   );
 }
 
@@ -75,7 +79,7 @@ function ClosedEye() {
   return (
     <>
       <path d="M26.5 68Q38 55 49.5 68" fill="none" {...line} strokeWidth="3" />
-      <path d="M27.2 65.5q-5.5-.6-8-4.3M29 61.8q-5-1.8-6.2-6.8M32.6 59q-3.8-3-3.8-8" fill="none" {...line} strokeWidth="2.2" />
+      <path d="M28.5 63.5q-6-1.5-7.5-8M32 60.5q-4.5-3-4.5-9.5" fill="none" {...line} strokeWidth="2.4" />
     </>
   );
 }
@@ -103,7 +107,7 @@ function Face({ mood }: { mood: Mood }) {
       <>
         <Mirrored>
           {/* Worried brows: little slanted dashes. */}
-          <path d="M30 47l11-4.5" fill="none" {...line} strokeWidth="2.4" />
+          <path d="M36 42l11-4.5" fill="none" {...line} strokeWidth="2.4" />
           <Eye wide />
         </Mirrored>
         {/* A round "o" of surprise. */}
