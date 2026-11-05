@@ -14,8 +14,7 @@ const MOUTH = '#f4a9bf';
 const TONGUE = '#ee7f9e';
 const NOSE = '#f59ab3';
 const BLUSH = '#f9b8c9';
-const GOLD = '#f2c94c';
-const GOLD_LIGHT = '#fff1b8';
+const GEM_BLUE = '#a9cdf2';
 const GOLD_SPARKLE = '#f7c948';
 const BLUE_SPARKLE = '#a9cdf2';
 
@@ -133,8 +132,10 @@ function Face({ mood, iris }: { mood: Mood; iris: string }) {
  * carries the meaning; the face sets the mood.
  */
 export function Mascot({ mood, message }: { mood: Mood; message: string }) {
-  // The gradient id must be unique on the page.
-  const iris = `${useId().replace(/:/g, '')}-iris`;
+  // Gradient ids must be unique on the page.
+  const base = useId().replace(/:/g, '');
+  const iris = `${base}-iris`;
+  const silver = `${base}-silver`;
 
   return (
     <div className={styles.mascot} data-mood={mood}>
@@ -150,6 +151,14 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
             <stop offset="0.4" stopColor="#2f63c0" />
             <stop offset="0.78" stopColor="#6a7fd6" />
             <stop offset="1" stopColor="#9b8be0" />
+          </linearGradient>
+          {/* Polished silver: bright and cool, with darker bands that read as metal. */}
+          <linearGradient id={silver} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#ffffff" />
+            <stop offset="0.35" stopColor="#dfe5ee" />
+            <stop offset="0.55" stopColor="#aeb8c8" />
+            <stop offset="0.75" stopColor="#eef2f8" />
+            <stop offset="1" stopColor="#9aa5b6" />
           </linearGradient>
         </defs>
 
@@ -170,19 +179,31 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
           </Mirrored>
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
 
-          {/* Little gold tiara: three peaks with pearl tips, a gem in the app's blue
-              gradient and two pink side gems. */}
+          {/* Silver tiara across the top of her head, in front of the ears: five peaks,
+              a blue gradient centre gem, blue and pink side gems and a polished shine. */}
           <g>
-            <path d="M44.5 35L46.5 25.5L52.5 31L60 18.5L67.5 31L73.5 25.5L75.5 35Q60 29.5 44.5 35Z" fill={GOLD} {...line} strokeWidth="1.8" />
-            <path d="M44 35Q60 29.5 76 35L75.6 38.4Q60 33 44.4 38.4Z" fill={GOLD} {...line} strokeWidth="1.8" />
-            <path d="M47.5 33.6Q60 29.4 72.5 33.6" fill="none" stroke={GOLD_LIGHT} strokeWidth="1.1" strokeLinecap="round" />
-            <circle cx="46.5" cy="24.6" r="2" fill="#fff" {...line} strokeWidth="1.3" />
-            <circle cx="73.5" cy="24.6" r="2" fill="#fff" {...line} strokeWidth="1.3" />
-            <circle cx="60" cy="17.2" r="2.3" fill="#fff" {...line} strokeWidth="1.3" />
-            <path d="M60 23.6q3.4 2.6 0 7.2q-3.4-4.6 0-7.2Z" fill={`url(#${iris})`} {...line} strokeWidth="1.3" />
-            <circle cx="59.1" cy="25.8" r="0.8" fill="#fff" />
-            <circle cx="52.6" cy="34.6" r="1.4" fill={NOSE} {...line} strokeWidth="1" />
-            <circle cx="67.4" cy="34.6" r="1.4" fill={NOSE} {...line} strokeWidth="1" />
+            <path
+              d="M31 41L35.5 31L40.5 35.6L46 23.5L52.5 32.3L60 16L67.5 32.3L74 23.5L79.5 35.6L84.5 31L89 41Q60 22.5 31 41Z"
+              fill={`url(#${silver})`}
+              {...line}
+              strokeWidth="1.8"
+            />
+            <path d="M30 41Q60 22 90 41L89 45.2Q60 27 31 45.2Z" fill={`url(#${silver})`} {...line} strokeWidth="1.8" />
+            {/* Bright streaks along the band and up the tallest peak. */}
+            <path d="M36 40.6Q60 25.4 84 40.6" fill="none" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M58.6 21l-1.6 7.6M44.8 28l-.8 4" fill="none" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+            {/* Gems: blue tips on the peaks, pink on the band, a teardrop in the middle. */}
+            <circle cx="35.5" cy="30.4" r="1.7" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
+            <circle cx="84.5" cy="30.4" r="1.7" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
+            <circle cx="46" cy="22.6" r="2" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
+            <circle cx="74" cy="22.6" r="2" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
+            <circle cx="60" cy="14.8" r="2.3" fill="#fff" {...line} strokeWidth="1.2" />
+            <path d="M60 22.4q3.8 3 0 8.2q-3.8-5.2 0-8.2Z" fill={`url(#${iris})`} {...line} strokeWidth="1.3" />
+            <circle cx="59" cy="24.8" r="0.9" fill="#fff" />
+            <circle cx="49.5" cy="35.4" r="1.5" fill={NOSE} {...line} strokeWidth="1" />
+            <circle cx="70.5" cy="35.4" r="1.5" fill={NOSE} {...line} strokeWidth="1" />
+            <Twinkle x={66} y={20} size={2.4} />
+            <Twinkle x={40} y={29.5} size={1.8} />
           </g>
 
           <Face mood={mood} iris={iris} />
