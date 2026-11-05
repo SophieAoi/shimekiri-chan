@@ -61,24 +61,23 @@ function octagon(x: number, y: number, r: number) {
  * top with a small table in the middle, facet lines between them and a glint.
  */
 function DiamondStud({ x, y, fill }: { x: number; y: number; fill: string }) {
-  const outer = octagon(x, y, 4.8);
-  const table = octagon(x, y, 2.2);
+  const outer = octagon(x, y, 3.3);
+  const table = octagon(x, y, 1.5);
   const points = (list: readonly (readonly [number, number])[]) => list.map(([px, py]) => `${px},${py}`).join(' ');
   return (
     <g>
-      <circle cx={x} cy={y} r="6" fill="#dfe5ee" {...line} strokeWidth="1.4" />
-      <polygon points={points(outer)} fill={fill} {...line} strokeWidth="0.9" />
+      <circle cx={x} cy={y} r="4.2" fill="#dfe5ee" {...line} strokeWidth="0.8" />
+      <polygon points={points(outer)} fill={fill} stroke="#8fa0bd" strokeWidth="0.5" strokeLinejoin="round" />
       <path
         d={outer.map(([px, py], i) => `M${px} ${py}L${table[i]![0]} ${table[i]![1]}`).join('')}
         fill="none"
-        stroke={LINE}
-        strokeWidth="0.5"
-        opacity="0.7"
+        stroke="#8fa0bd"
+        strokeWidth="0.4"
       />
-      <polygon points={points(table)} fill="#fff" stroke={LINE} strokeWidth="0.5" strokeOpacity="0.7" />
-      <path d={`M${x - 3.2} ${y - 1.4}l1.7-1.7`} stroke="#fff" strokeWidth="1.1" strokeLinecap="round" />
-      <Twinkle className={styles.sparkle} x={x + 8} y={y - 6.5} size={3.2} />
-      <Twinkle className={styles.sparkle} x={x - 7.5} y={y - 6} size={1.8} fill={GEM_BLUE} />
+      <polygon points={points(table)} fill="#fff" stroke="#8fa0bd" strokeWidth="0.4" />
+      <path d={`M${x - 2.2} ${y - 1}l1.2-1.2`} stroke="#fff" strokeWidth="0.9" strokeLinecap="round" />
+      <Twinkle className={styles.sparkle} x={x + 6} y={y - 5} size={2.4} />
+      <Twinkle className={styles.sparkle} x={x - 5.5} y={y - 4.5} size={1.4} fill={GEM_BLUE} />
     </g>
   );
 }
