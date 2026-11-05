@@ -61,7 +61,11 @@ function Eye({ iris, wide = false }: { iris: string; wide?: boolean }) {
       <path d={`M27.6 ${66 + ry * 0.2}Q29.4 ${66 + ry * 0.85} 38.5 ${66 + ry - 1.4}Q31.8 ${66 + ry * 0.7} 30.6 ${66 + ry * 0.2}Z`} fill="#fff" />
       <circle cx="43" cy={66 - ry * 0.5} r="3.6" fill="#fff" />
       <circle cx="45.4" cy={66 - ry * 0.08} r="1.9" fill="#fff" />
+      {/* A faint inner ring gives the gem a cut edge. */}
+      <ellipse cx="38" cy="66" rx="9.4" ry={ry - 2.1} fill="none" stroke="#1b3f86" strokeOpacity="0.35" strokeWidth="1.2" />
       <ellipse cx="38" cy="66" rx="11.5" ry={ry} fill="none" {...line} strokeWidth="3" />
+      {/* Heavier upper lid, so the eye reads crisply at small sizes. */}
+      <path d={`M27 ${66 - ry * 0.35}A11.5 ${ry} 0 0 1 49 ${66 - ry * 0.35}`} fill="none" {...line} strokeWidth="4.4" />
       {/* Two curled lashes off the top outer edge. */}
       <path d="M28.5 57.5q-6-1.5-7.5-8M32 54.5q-4.5-3-4.5-9.5" fill="none" {...line} strokeWidth="2.4" />
     </g>
@@ -152,14 +156,22 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
         </defs>
 
         <g className={styles.body}>
-          {/* Ears: white with pink insides. */}
+          {/* Ears: white with outlined pink insides. */}
           <Mirrored>
-            <path d="M18 58L14 18q0-6 6-4l28 22Z" fill={FUR} {...line} strokeWidth="2.6" />
-            <path d="M22.5 50.5l-2.5-28 22 14.5Z" fill={INNER_EAR} />
+            <path d="M18 58L14 18q0-6 6-4l28 22Z" fill={FUR} {...line} strokeWidth="3" />
+            <path d="M22.5 50.5l-2.5-28 22 14.5Z" fill={INNER_EAR} {...line} strokeWidth="1.3" />
+            {/* Tufts of white fur at the base of the ear. */}
+            <path d="M23 50l3.5-9M27 49l4-7.5M31 46.5l4-5.5" fill="none" stroke={FUR} strokeWidth="2" strokeLinecap="round" />
           </Mirrored>
 
-          {/* Head: pure white fur. */}
-          <path d={HEAD} fill={FUR} {...line} strokeWidth="2.6" />
+          {/* Head: pure white fur with a heavier outer line. */}
+          <path d={HEAD} fill={FUR} {...line} strokeWidth="3.2" />
+
+          {/* Fine fur strokes at the temples and inside the cheek tufts. */}
+          <Mirrored>
+            <path d="M26 44q4 1.5 5.5 6M31 39.5q3.5 2 4 6.5" fill="none" {...line} strokeWidth="1.4" opacity="0.7" />
+            <path d="M12.5 70.5q5 .5 8 4M13 79q4.5 0 7.5 3.5" fill="none" {...line} strokeWidth="1.4" opacity="0.7" />
+          </Mirrored>
 
           {/* Blush, a tiny nose and two short whiskers each side. */}
           <Mirrored>
@@ -167,6 +179,7 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
             <path d="M16 88l-9-2M16 92l-9 1" fill="none" {...line} strokeWidth="1.6" />
           </Mirrored>
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
+          <ellipse cx="58.6" cy="78.9" rx="1.2" ry="0.6" fill="#fff" opacity="0.8" />
 
           <Face mood={mood} iris={iris} />
         </g>
