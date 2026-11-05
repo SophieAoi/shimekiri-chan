@@ -9,8 +9,15 @@
   --paper: #ffffff;
   --paper-muted: #f2f5fa;
 
-  /* Page background: a quiet top-to-bottom blue wash. */
-  --gradient-page: linear-gradient(170deg, #d6e3f7 0%, #e9f0fb 32%, #f6f8fc 70%);
+  /* Page background: sky blue drifting into lavender, with two soft glows. */
+  --gradient-page:
+    radial-gradient(900px 700px at 0% 0%, #bfd3f5 0%, transparent 65%),
+    radial-gradient(900px 700px at 100% 100%, #d9d1f5 0%, transparent 65%),
+    linear-gradient(150deg, #d3e1f8 0%, #e4ebfa 45%, #e8e4f8 100%);
+  /* Cards: white fading to the faintest blue, so they sit in the page. */
+  --gradient-card: linear-gradient(180deg, #ffffff 0%, #ffffff 40%, #f5f8fe 100%);
+  /* Thin strip along the top of the main card. */
+  --gradient-strip: linear-gradient(90deg, #2f63c0 0%, #6a7fd6 55%, #9b8be0 100%);
   /* Primary buttons and the selected tab. */
   --gradient-accent: linear-gradient(135deg, #2f63c0 0%, #1b3f86 100%);
   --gradient-accent-hover: linear-gradient(135deg, #2756a9 0%, #15336f 100%);
