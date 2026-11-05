@@ -60,7 +60,7 @@
 /* The ponytail swings gently from its tie, a beat behind the head. */
 .ponytail {
   transform-box: view-box;
-  transform-origin: 86px 24px;
+  transform-origin: 82px 22px;
   animation: swing 4s ease-in-out infinite;
 }
 

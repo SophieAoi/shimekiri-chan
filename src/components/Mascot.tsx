@@ -1,59 +1,81 @@
+import { useId, type ReactNode } from 'react';
 import type { Mood } from '../types';
 import styles from './Mascot.module.css';
 
 /** Palette for Shimekiri-chan. Kept here because nothing else in the app uses it. */
-const INK = '#26222e';
-const HAIR = '#2b2733';
-const SKIN = '#f8e3d7';
-const SKIN_EDGE = '#e6c3b2';
-const LIPS = '#b2536a';
-const BLUSH = '#f1a5a8';
-const GOLD = '#d2a54c';
-const FRAME = '#2b2b33';
+const LINER = '#1d1418';
+const HAIR = '#2a2126';
+const HAIR_SHINE = '#5a4650';
+const SKIN = '#f3d4c2';
+const SKIN_EDGE = '#dfb19c';
+const SHADOW = '#a7798d';
+const IRIS = '#7a4f3a';
+const LIP_TOP = '#ad3656';
+const LIP_BOTTOM = '#c64a6c';
+const LIP_LINE = '#7a2140';
+const MOUTH = '#5a1f30';
+const GOLD = '#c9a24a';
+const GOLD_LIGHT = '#ead08a';
 
-/** Lens centres. Eyes, brows and blush are placed relative to these. */
-const LENSES = [44, 72] as const;
-const EYE_Y = 65;
+/** Everything on the face is drawn for her right side (viewer's left), then mirrored. */
+const MIRROR = 'translate(116 0) scale(-1 1)';
 
-/** Big glossy eyes with a small flick of lashes at the outer corner. */
-function Eyes({ blink = false }: { blink?: boolean }) {
+function Mirrored({ children }: { children: ReactNode }) {
   return (
-    <g className={blink ? styles.blink : undefined}>
-      {LENSES.map((cx, index) => {
-        const outer = index === 0 ? -1 : 1;
-        return (
-          <g key={cx}>
-            <circle cx={cx} cy={EYE_Y} r="6" fill={INK} />
-            <circle cx={cx + 1.9} cy={EYE_Y - 2} r="1.9" fill="#fff" />
-            <circle cx={cx - 1.6} cy={EYE_Y + 2} r="0.9" fill="#fff" />
-            {/* Upper lash line, then the flick. */}
-            <path
-              d={`M${cx - 6} ${EYE_Y - 3}q6 -5 12 0m${outer === 1 ? 0 : -12} 0l${outer * 2.6} -2`}
-              fill="none"
-              stroke={INK}
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          </g>
-        );
-      })}
+    <>
+      <g>{children}</g>
+      <g transform={MIRROR}>{children}</g>
+    </>
+  );
+}
+
+/** Almond doll eye: smoky lid, big iris, winged liner and a few long lashes. */
+function OpenEye({ clipId }: { clipId: string }) {
+  return (
+    <>
+      <path d="M28 62Q42 43 57.5 58Q43 51 28 62Z" fill={SHADOW} opacity="0.55" />
+      <path d="M31 63.5Q42 51 55 61.5Q44 72 31 63.5Z" fill="#fff" />
+      <g clipPath={`url(#${clipId})`}>
+        <circle cx="43.5" cy="62.5" r="6.8" fill={IRIS} />
+        <circle cx="43.5" cy="62.5" r="3.1" fill={LINER} />
+        <circle cx="46" cy="60" r="2" fill="#fff" />
+        <circle cx="41.2" cy="65.2" r="0.9" fill="#fff" />
+      </g>
+      <path d="M33 65.6Q44 71.5 54 62.6" fill="none" stroke="#7d5a63" strokeWidth="0.8" />
+      <Lashes />
+    </>
+  );
+}
+
+/** Upper liner with a wing and lashes, shared by open and smiling eyes. */
+function Lashes({ d = 'M30 63Q42 50.5 55.6 61.6' }: { d?: string }) {
+  return (
+    <g fill="none" stroke={LINER} strokeLinecap="round">
+      <path d={d} strokeWidth="2.6" />
+      <path d="M31 62.9L24.2 58.6" strokeWidth="2.2" />
+      <path d="M32.6 60.4l-3.6-3.6M35.8 57.6l-2.4-4.4M39.4 55.8l-1.1-4.6" strokeWidth="1.4" />
     </g>
   );
 }
 
-/** Only the face changes with mood; hair, glasses and head stay put. */
-function Face({ mood }: { mood: Mood }) {
-  const line = { fill: 'none', stroke: INK, strokeLinecap: 'round' } as const;
+/** Only the eyes, brows and mouth change with mood. */
+function Face({ mood, clipId }: { mood: Mood; clipId: string }) {
+  const brow = { fill: 'none', stroke: HAIR, strokeWidth: 2.4, strokeLinecap: 'round' } as const;
 
   if (mood === 'happy') {
     return (
       <>
-        <path d="M37 50q7-4 14-2M65 48q7-2 14 2" {...line} strokeWidth="1.8" />
-        {/* Smiling eyes: closed arcs. */}
-        <path d="M38 67q6-7 12 0M66 67q6-7 12 0" {...line} strokeWidth="2.4" />
-        <path d="M51 83q7 9 14 0Z" fill={LIPS} stroke={LIPS} strokeWidth="1.5" strokeLinejoin="round" />
-        <path className={styles.sparkle} d="M8 20l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5Z" fill={GOLD} />
-        <path className={styles.sparkle} d="M106 92l2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill={GOLD} />
+        <Mirrored>
+          <path d="M30 50Q40 42 52 47" {...brow} />
+          <path d="M28 62Q42 43 57.5 58Q43 51 28 62Z" fill={SHADOW} opacity="0.55" />
+          {/* Smiling eyes: an upturned lash line. */}
+          <Lashes d="M32 64Q43 55 54.5 63" />
+        </Mirrored>
+        {/* Open smile with a row of teeth. */}
+        <path d="M47 85Q58 89 69 85Q66 97 58 97Q50 97 47 85Z" fill={MOUTH} stroke={LIP_BOTTOM} strokeWidth="2.6" strokeLinejoin="round" />
+        <path d="M49.5 86.4Q58 89.6 66.5 86.4L65.6 88.8Q58 91 50.4 88.8Z" fill="#fff" />
+        <path className={styles.sparkle} d="M8 18l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5Z" fill={GOLD} />
+        <path className={styles.sparkle} d="M104 98l2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill={GOLD} />
       </>
     );
   }
@@ -61,86 +83,104 @@ function Face({ mood }: { mood: Mood }) {
   if (mood === 'nervous') {
     return (
       <>
-        {/* Inner ends raised: worried, not cross. */}
-        <path d="M37 50q7 0 13-5M66 45q6 5 13 5" {...line} strokeWidth="1.8" />
-        <Eyes />
-        {/* A small round gasp. */}
-        <ellipse cx="58" cy="86" rx="3" ry="3.6" fill="#8f3a4f" />
-        <path className={styles.sweat} d="M15 40c4 6 6 8 6 11a6 6 0 0 1-12 0c0-3 2-5 6-11Z" fill="#d6e6f5" stroke="#8aa6c4" strokeWidth="1.3" />
+        <Mirrored>
+          {/* Inner ends raised: worried, not cross. */}
+          <path d="M30 49Q42 48 51 43" {...brow} />
+          <OpenEye clipId={clipId} />
+        </Mirrored>
+        {/* Glossy lips parted in a little gasp. */}
+        <ellipse cx="58" cy="88" rx="5" ry="4.6" fill={LIP_BOTTOM} />
+        <ellipse cx="58" cy="88.2" rx="2.6" ry="2.4" fill={MOUTH} />
+        <path className={styles.sweat} d="M13 34c4 6 6 8 6 11a6 6 0 0 1-12 0c0-3 2-5 6-11Z" fill="#d6e6f5" stroke="#8aa6c4" strokeWidth="1.3" />
       </>
     );
   }
 
   return (
     <>
-      <path d="M37 50q7-4 14-2M65 48q7-2 14 2" {...line} strokeWidth="1.8" />
-      <Eyes blink />
-      {/* A soft closed smile. */}
-      <path d="M53 84q5 4 10 0" fill="none" stroke={LIPS} strokeWidth="2.2" strokeLinecap="round" />
+      <Mirrored>
+        <path d="M30 50Q40 43 52 48" {...brow} />
+        <g className={styles.blink}>
+          <OpenEye clipId={clipId} />
+        </g>
+      </Mirrored>
+      {/* Full glossy lips: a cupid's bow on top, a fuller lower lip, a highlight. */}
+      <path d="M47.5 86Q52.5 80.5 56.5 82.8Q58 83.8 59.5 82.8Q63.5 80.5 68.5 86Q58 87.6 47.5 86Z" fill={LIP_TOP} />
+      <path d="M47.5 86Q58 87.6 68.5 86Q65 94.5 58 94.5Q51 94.5 47.5 86Z" fill={LIP_BOTTOM} />
+      <path d="M48 86Q58 88 68 86" fill="none" stroke={LIP_LINE} strokeWidth="0.9" strokeLinecap="round" />
+      <ellipse cx="60.5" cy="90.4" rx="3.6" ry="1.2" fill="#fff" opacity="0.55" />
     </>
   );
 }
 
 /**
- * Shimekiri-chan, an original character: sleek dark hair in a high ponytail, round
- * glasses and gold studs. The speech bubble carries the meaning; the face sets the mood.
+ * Shimekiri-chan, an original fashion-doll style character: a sleek high ponytail,
+ * oversized gold glasses and hoops. The speech bubble carries the meaning; the face
+ * sets the mood.
  */
 export function Mascot({ mood, message }: { mood: Mood; message: string }) {
+  // The eye clip needs an id that is unique on the page.
+  const clipId = `${useId().replace(/:/g, '')}-eye`;
+
   return (
     <div className={styles.mascot} data-mood={mood}>
       <p className={styles.bubble} role="status">
         {message}
       </p>
       <svg className={styles.art} viewBox="-2 0 124 122" aria-hidden="true">
+        <defs>
+          {/* Keeps the iris inside the eye. Mirrored along with the eye it clips. */}
+          <clipPath id={clipId}>
+            <path d="M31 63.5Q42 51 55 61.5Q44 72 31 63.5Z" />
+          </clipPath>
+        </defs>
+
         <g className={styles.body}>
-          {/* Ponytail first, so the head sits in front of it. It swings from the tie. */}
+          {/* High ponytail behind the head, swinging from the cuff. */}
           <g className={styles.ponytail}>
-            <path
-              d="M84 24C98 8 120 14 116 38c-2 16-10 28-6 46-12-8-14-24-12-38 1-10-4-16-14-16Z"
-              fill={HAIR}
-            />
-            <path d="M100 24c8 4 10 14 7 26" fill="none" stroke="#fff" strokeOpacity="0.16" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M80 20C96 2 124 8 120 36c-2 18-12 30-6 54-16-10-18-30-16-46 1-12-6-20-18-18Z" fill={HAIR} />
+            <path d="M104 16c10 6 12 18 8 32" fill="none" stroke={HAIR_SHINE} strokeWidth="2.5" strokeLinecap="round" />
           </g>
 
-          {/* Hair behind the face, pulled back smoothly. */}
-          <path d="M20 62C18 34 36 16 58 16s40 18 38 46c0 10-3 18-6 22V58H26v26c-3-4-6-12-6-22Z" fill={HAIR} />
+          {/* Hair behind the face. */}
+          <path d="M18 58C14 30 34 12 58 12s44 18 40 46c0 10-3 18-6 24L90 56H26l-2 26c-3-6-6-14-6-24Z" fill={HAIR} />
 
-          {/* Ears with gold studs. */}
-          <ellipse cx="25.5" cy="68" rx="4.2" ry="6.2" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
-          <ellipse cx="90.5" cy="68" rx="4.2" ry="6.2" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
-          <circle cx="25.5" cy="76" r="2.1" fill={GOLD} />
-          <circle cx="90.5" cy="76" r="2.1" fill={GOLD} />
+          {/* Face: a wide brow narrowing to a small, pointed chin. */}
+          <path d="M24 54C24 34 40 26 58 26s34 8 34 28c0 22-14 44-34 50C38 98 24 76 24 54Z" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
 
-          {/* Face. */}
-          <path d="M26 56c0 28 14 48 32 48s32-20 32-48c0-16-14-26-32-26S26 40 26 56Z" fill={SKIN} stroke={SKIN_EDGE} strokeWidth="1" />
+          {/* Slicked-back hairline with face-framing strands. */}
+          <path d="M22 60C20 34 36 18 58 18s38 16 36 42c-2-12-8-22-20-26-6-2-12-3-16-1-4-2-10-1-16 1-12 4-18 14-20 26Z" fill={HAIR} />
+          <Mirrored>
+            <path d="M28 42c-6 14-4 34 3 46-3-12-3-28 1-40Z" fill={HAIR} />
+          </Mirrored>
+          <path d="M36 26q12-8 24-7" fill="none" stroke={HAIR_SHINE} strokeWidth="2.5" strokeLinecap="round" />
 
-          {/* Side part on her right, with the fringe swept across to the left temple. */}
-          <path
-            d="M25 60C22 36 38 21 60 21c20 0 33 13 31 33-5-10-11-16-19-18-12 6-28 10-38 14-4 2-7 5-9 10Z"
-            fill={HAIR}
-          />
-          {/* Strands in the fringe and a soft shine on the crown. */}
-          <path d="M70 38C60 43 47 46 37 51M64 34C54 38 42 41 32 47" fill="none" stroke="#45404f" strokeWidth="1" strokeLinecap="round" />
-          <path d="M37 31q9-7 21-8" fill="none" stroke="#fff" strokeOpacity="0.16" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Gold cuff at the base of the ponytail. */}
+          <rect x="78" y="17.5" width="12" height="7" rx="3" transform="rotate(-40 84 21)" fill={GOLD} />
+          <path d="M80.5 21.5l6-5" stroke={GOLD_LIGHT} strokeWidth="1.2" strokeLinecap="round" />
 
-          {/* Scrunchie at the base of the ponytail, in the app's blue. */}
-          <ellipse cx="88" cy="24" rx="6.5" ry="4.8" transform="rotate(-35 88 24)" fill="var(--blue-700)" />
-          <path d="M84.5 22.5q3.5-3 7 0" fill="none" stroke="#fff" strokeOpacity="0.35" strokeWidth="1.3" strokeLinecap="round" />
+          {/* Gold hoops below the strands. */}
+          <Mirrored>
+            <circle cx="27" cy="82" r="5.5" fill="none" stroke={GOLD} strokeWidth="1.8" />
+          </Mirrored>
 
-          {/* Blush and a tiny nose. */}
-          <ellipse cx="35" cy="79" rx="6" ry="3.4" fill={BLUSH} opacity="0.5" />
-          <ellipse cx="81" cy="79" rx="6" ry="3.4" fill={BLUSH} opacity="0.5" />
-          <path d="M58.5 72q1.8 3-1 4.2" fill="none" stroke="#d29f8c" strokeWidth="1.3" strokeLinecap="round" />
+          {/* Contour blush, a tiny nose and a beauty mark. */}
+          <Mirrored>
+            <ellipse cx="34" cy="78" rx="7" ry="3.4" fill="#e58e98" opacity="0.35" />
+          </Mirrored>
+          <path d="M56 76.5q2 1.6 4 0" fill="none" stroke="#c48a77" strokeWidth="1.2" strokeLinecap="round" />
+          <circle cx="71" cy="81" r="0.9" fill="#4a2f2f" />
 
-          <Face mood={mood} />
+          <Face mood={mood} clipId={clipId} />
 
-          {/* Round glasses over the eyes: thin frames, a faint lens tint. */}
-          <g fill="none" stroke={FRAME} strokeWidth="1.6">
-            {LENSES.map((cx) => (
-              <circle key={cx} cx={cx} cy={EYE_Y} r="11.5" fill="#fff" fillOpacity="0.12" />
-            ))}
-            <path d="M55.5 63q2.5-2.5 5 0M32.5 62l-6-2M83.5 62l6-2" strokeLinecap="round" />
-          </g>
+          {/* Oversized thin gold frames with a slight cat-eye lift. */}
+          <Mirrored>
+            <g fill="none" stroke={GOLD} strokeWidth="1.3" strokeLinecap="round">
+              <rect x="29" y="52" width="27.5" height="21" rx="9" fill="#fff" fillOpacity="0.08" />
+              <path d="M29.6 56.5l-2.4-3.2M29 61l-5-2" />
+            </g>
+          </Mirrored>
+          <path d="M56.5 60q1.5-2 3 0" fill="none" stroke={GOLD} strokeWidth="1.5" />
         </g>
       </svg>
     </div>
