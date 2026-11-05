@@ -107,7 +107,7 @@ function Face({ mood, iris }: { mood: Mood; iris: string }) {
         </Mirrored>
         {/* A round "o" of surprise. */}
         <ellipse cx="60" cy="89" rx="4" ry="4.8" fill={MOUTH} {...line} strokeWidth="2.2" />
-        <path className={styles.sweat} d="M112 34c4.5 6.5 6.5 9 6.5 12a6.5 6.5 0 0 1-13 0c0-3 2-5.5 6.5-12Z" fill="#d6e6f5" {...line} strokeWidth="1.8" />
+        <path className={styles.sweat} d="M9 34c4.5 6.5 6.5 9 6.5 12a6.5 6.5 0 0 1-13 0c0-3 2-5.5 6.5-12Z" fill="#d6e6f5" {...line} strokeWidth="1.8" />
       </>
     );
   }
@@ -135,7 +135,7 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
   // Gradient ids must be unique on the page.
   const base = useId().replace(/:/g, '');
   const iris = `${base}-iris`;
-  const silver = `${base}-silver`;
+  const diamond = `${base}-diamond`;
 
   return (
     <div className={styles.mascot} data-mood={mood}>
@@ -152,13 +152,11 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
             <stop offset="0.78" stopColor="#6a7fd6" />
             <stop offset="1" stopColor="#9b8be0" />
           </linearGradient>
-          {/* Polished silver: bright and cool, with darker bands that read as metal. */}
-          <linearGradient id={silver} x1="0" y1="0" x2="0" y2="1">
+          {/* Diamond: clear white catching a little blue light. */}
+          <linearGradient id={diamond} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.35" stopColor="#dfe5ee" />
-            <stop offset="0.55" stopColor="#aeb8c8" />
-            <stop offset="0.75" stopColor="#eef2f8" />
-            <stop offset="1" stopColor="#9aa5b6" />
+            <stop offset="0.5" stopColor="#dcefff" />
+            <stop offset="1" stopColor="#a9cdf2" />
           </linearGradient>
         </defs>
 
@@ -179,31 +177,13 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
           </Mirrored>
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
 
-          {/* Silver tiara across the top of her head, in front of the ears: five peaks,
-              a blue gradient centre gem, blue and pink side gems and a polished shine. */}
+          {/* A diamond stud pierced through the edge of one ear, with a sparkle. */}
           <g>
-            <path
-              d="M31 41L35.5 31L40.5 35.6L46 23.5L52.5 32.3L60 16L67.5 32.3L74 23.5L79.5 35.6L84.5 31L89 41Q60 22.5 31 41Z"
-              fill={`url(#${silver})`}
-              {...line}
-              strokeWidth="1.8"
-            />
-            <path d="M30 41Q60 22 90 41L89 45.2Q60 27 31 45.2Z" fill={`url(#${silver})`} {...line} strokeWidth="1.8" />
-            {/* Bright streaks along the band and up the tallest peak. */}
-            <path d="M36 40.6Q60 25.4 84 40.6" fill="none" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-            <path d="M58.6 21l-1.6 7.6M44.8 28l-.8 4" fill="none" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
-            {/* Gems: blue tips on the peaks, pink on the band, a teardrop in the middle. */}
-            <circle cx="35.5" cy="30.4" r="1.7" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
-            <circle cx="84.5" cy="30.4" r="1.7" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
-            <circle cx="46" cy="22.6" r="2" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
-            <circle cx="74" cy="22.6" r="2" fill={GEM_BLUE} {...line} strokeWidth="1.1" />
-            <circle cx="60" cy="14.8" r="2.3" fill="#fff" {...line} strokeWidth="1.2" />
-            <path d="M60 22.4q3.8 3 0 8.2q-3.8-5.2 0-8.2Z" fill={`url(#${iris})`} {...line} strokeWidth="1.3" />
-            <circle cx="59" cy="24.8" r="0.9" fill="#fff" />
-            <circle cx="49.5" cy="35.4" r="1.5" fill={NOSE} {...line} strokeWidth="1" />
-            <circle cx="70.5" cy="35.4" r="1.5" fill={NOSE} {...line} strokeWidth="1" />
-            <Twinkle x={66} y={20} size={2.4} />
-            <Twinkle x={40} y={29.5} size={1.8} />
+            <path d="M100 42.5h6l2.4 2.7-5.4 6.3-5.4-6.3Z" fill={`url(#${diamond})`} {...line} strokeWidth="1.4" />
+            <path d="M97.6 45.2h10.8M101.3 45.2l1.7 6.3 1.7-6.3M100 42.5l1.3 2.7M106 42.5l-1.3 2.7" fill="none" {...line} strokeWidth="0.8" />
+            <path d="M100.6 43.2h2.2l-.9 1.6h-2.4Z" fill="#fff" />
+            <Twinkle className={styles.sparkle} x={111} y={39} size={3.2} />
+            <Twinkle className={styles.sparkle} x={96} y={38.5} size={1.8} fill={GEM_BLUE} />
           </g>
 
           <Face mood={mood} iris={iris} />
