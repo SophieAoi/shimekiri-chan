@@ -1,12 +1,12 @@
-import { ChevronDown, Plus } from 'lucide-react';
+import { ChevronDown, Layers, Plus, type LucideIcon } from 'lucide-react';
 import { useEffect, useRef, type KeyboardEvent } from 'react';
 import styles from './Tabs.module.css';
 
 export interface TabItem {
   id: string;
   label: string;
-  /** Decorative emoji shown before the label. Hidden from screen readers. */
-  icon?: string;
+  /** Decorative line icon shown before the label. Hidden from screen readers. */
+  icon?: LucideIcon;
   /** Second line shown in the sidebar, e.g. the module name under its code. */
   detail?: string;
   fullLabel: string;
@@ -112,11 +112,7 @@ export function Tabs(props: TabsProps) {
         tabIndex={tab.id === focusableId ? 0 : -1}
         onClick={() => onSelect(tab.id)}
       >
-        {tab.icon && (
-          <span className={styles.icon} aria-hidden="true">
-            {tab.icon}
-          </span>
-        )}
+        {tab.icon && <tab.icon className={styles.icon} size={18} strokeWidth={1.75} aria-hidden="true" />}
         <span className={styles.text}>
           <span className={styles.label}>{tab.label}</span>
           {vertical && tab.detail && <span className={styles.detail}> {tab.detail}</span>}
@@ -146,9 +142,7 @@ export function Tabs(props: TabsProps) {
               aria-describedby={modulesCollapsed ? 'module-tabs-count' : undefined}
               onClick={onToggleModules}
             >
-              <span className={styles.icon} aria-hidden="true">
-                📚
-              </span>
+              <Layers className={styles.icon} size={18} strokeWidth={1.75} aria-hidden="true" />
               <span className={styles.groupLabel}>Modules</span>
               {/* Folded modules still report their total, so a deadline can't hide. */}
               {modulesCollapsed && (

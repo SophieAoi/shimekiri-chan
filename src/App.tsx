@@ -1,3 +1,4 @@
+import { CalendarDays, Star } from 'lucide-react';
 import { useState } from 'react';
 import styles from './App.module.css';
 import { ConfirmDeleteModule } from './components/ConfirmDeleteModule';
@@ -49,7 +50,7 @@ function Shell() {
     {
       id: UPCOMING_TAB_ID,
       label: UPCOMING_LABEL,
-      icon: '📅',
+      icon: CalendarDays,
       fullLabel: UPCOMING_LABEL,
       // Every urgent task falls inside the Upcoming window, so all of them count here.
       openCount: upcomingTasks(data.tasks, today).length,
@@ -59,7 +60,7 @@ function Shell() {
     {
       id: GENERAL_LIST_ID,
       label: GENERAL_LABEL,
-      icon: '⭐',
+      icon: Star,
       fullLabel: GENERAL_LABEL,
       ...counts(GENERAL_LIST_ID),
       group: 'fixed',

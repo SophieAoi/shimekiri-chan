@@ -61,8 +61,23 @@
 
 .icon {
   flex: none;
-  font-size: 1rem;
-  line-height: 1;
+  color: var(--ink-soft);
+  transition: color 0.15s ease;
+}
+
+.tab:hover .icon,
+.groupToggle:hover .icon,
+.tab[aria-selected='true'] .icon {
+  color: inherit;
+}
+
+/* Tab names share the headings' serif; the module's full name stays in Inter. */
+.label,
+.groupLabel {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.005em;
 }
 
 .text {
