@@ -56,20 +56,3 @@ export function upcomingTasks(tasks: readonly Task[], today: string): Task[] {
     ),
   );
 }
-
-export type UpcomingGroup = 'overdue' | 'today' | 'week' | 'later';
-
-/** Headings for the Upcoming tab, in display order. */
-export const UPCOMING_GROUPS: readonly { id: UpcomingGroup; label: string }[] = [
-  { id: 'overdue', label: 'Overdue' },
-  { id: 'today', label: 'Today' },
-  { id: 'week', label: 'Next 7 days' },
-  { id: 'later', label: 'Later' },
-];
-
-export function getUpcomingGroup(task: Task, today: string): UpcomingGroup {
-  const days = daysBetween(today, task.due);
-  if (days < 0) return 'overdue';
-  if (days === 0) return 'today';
-  return days <= 7 ? 'week' : 'later';
-}

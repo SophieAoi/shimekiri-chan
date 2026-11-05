@@ -62,3 +62,57 @@ export function formatDate(iso: string, today: string): string {
   const label = `${part('weekday')} ${part('day')} ${part('month')}`;
   return year === parts(today)[0] ? label : `${label} ${year}`;
 }
+
+const utc = (iso: string) => {
+  const [year, month, day] = parts(iso);
+  return new Date(Date.UTC(year, month - 1, day));
+};
+
+/** Day of the week with Monday as 0, matching the calendar's columns. */
+export function weekdayIndex(iso: string): number {
+  return (utc(iso).getUTCDay() + 6) % 7;
+}
+
+/** The first day of the month that `iso` falls in. */
+export function startOfMonth(iso: string): string {
+  const [year, month] = parts(iso);
+  return `${year}-${pad(month)}-01`;
+}
+
+/** The first day of the month `months` away from the one `iso` falls in. */
+export function addMonths(iso: string, months: number): string {
+  const [year, month] = parts(iso);
+  const date = new Date(Date.UTC(year, month - 1 + months, 1));
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-01`;
+}
+
+/**
+ * Every date shown on a month view: whole Monday-to-Sunday weeks covering the month,
+ * so the result is always a multiple of seven.
+ */
+export function monthGrid(month: string): string[] {
+  const first = startOfMonth(month);
+  const last = addDays(addMonths(first, 1), -1);
+  const start = addDays(first, -weekdayIndex(first));
+  const end = addDays(last, 6 - weekdayIndex(last));
+  const length = daysBetween(start, end) + 1;
+  return Array.from({ length }, (_, index) => addDays(start, index));
+}
+
+/** "November 2026". */
+export function formatMonth(iso: string): string {
+  return new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(utc(iso));
+}
+
+/** "Wednesday 5 November", built from parts for the same reason as formatDate. */
+export function formatLongDate(iso: string): string {
+  const dateParts = new Intl.DateTimeFormat('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  }).formatToParts(utc(iso));
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    dateParts.find((item) => item.type === type)?.value;
+  return `${part('weekday')} ${part('day')} ${part('month')}`;
+}

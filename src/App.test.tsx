@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { App } from './App';
-import { addDays, toISODate } from './lib/dates';
+import { addDays, addMonths, toISODate } from './lib/dates';
 import { saveData, STORAGE_KEY } from './lib/storage';
 import { createSeedData } from './data/seed';
 import { makeTask } from './test/factories';
@@ -64,6 +64,7 @@ describe('tasks', () => {
 
   it('blocks saving without a title or date and explains why', async () => {
     const { user } = setup();
+    await openTab(user, 'General');
     await user.click(screen.getByRole('button', { name: 'Add task' }));
     await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Add task' }));
 
@@ -164,7 +165,7 @@ describe('organising', () => {
     });
     setup();
 
-    const item = screen.getByText('Late report').closest('li')!;
+    const item = screen.getByRole('checkbox', { name: /Late report/ }).closest('li')!;
     expect(item).toHaveAttribute('data-urgency', 'overdue');
     expect(within(item).getByText(/Overdue by 2 days/)).toBeInTheDocument();
     expect(within(item).getByText('COMP3041')).toBeInTheDocument();
@@ -204,28 +205,52 @@ describe('cleaner lists', () => {
     saveData({ ...createSeedData(), tasks: [makeTask({ due: today() })] });
     const { user } = setup();
 
-    const upcomingRow = screen.getByText('Read chapter 3').closest('li')!;
+    const upcomingRow = screen.getByRole('checkbox', { name: /Read chapter 3/ }).closest('li')!;
     expect(within(upcomingRow).getByText('Homework')).toBeInTheDocument();
 
     await openTab(user, /General/);
-    const sectionRow = screen.getByText('Read chapter 3').closest('li')!;
+    const sectionRow = screen.getByRole('checkbox', { name: /Read chapter 3/ }).closest('li')!;
     expect(within(sectionRow).queryByText('Homework')).not.toBeInTheDocument();
   });
 
-  it('groups Upcoming under time headings', () => {
+  it('plots tasks on a calendar and lists the picked day', async () => {
+    const soon = addDays(today(), 1);
     saveData({
       ...createSeedData(),
       tasks: [
         makeTask({ id: 'a', title: 'Late', due: addDays(today(), -1) }),
         makeTask({ id: 'b', title: 'Now', due: today() }),
-        makeTask({ id: 'c', title: 'Soon', due: addDays(today(), 5) }),
-        makeTask({ id: 'd', title: 'Further', due: addDays(today(), 12) }),
+        makeTask({ id: 'c', title: 'Tomorrow thing', due: soon }),
       ],
     });
-    setup();
+    const { user } = setup();
 
-    const headings = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
-    expect(headings).toEqual(['Overdue1', 'Today1', 'Next 7 days1', 'Later1']);
+    // Overdue work is listed on its own; today's tasks are listed under the calendar.
+    expect(screen.getByRole('heading', { name: /^Overdue/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Today, / })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /Now/ })).toBeInTheDocument();
+    expect(screen.queryByRole('checkbox', { name: /Tomorrow thing/ })).not.toBeInTheDocument();
+
+    const todayButton = screen.getByRole('button', { name: /^Today, .*1 task:\s?Now/ });
+    expect(todayButton).toHaveAttribute('aria-current', 'date');
+    expect(todayButton).toHaveAttribute('aria-pressed', 'true');
+
+    // Arrow keys move the selection, and the list follows.
+    todayButton.focus();
+    await user.keyboard('{ArrowRight}');
+    const next = document.querySelector<HTMLElement>(`[data-date="${soon}"]`)!;
+    expect(next).toHaveFocus();
+    expect(next).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('checkbox', { name: /Tomorrow thing/ })).toBeInTheDocument();
+    expect(screen.queryByRole('checkbox', { name: /Now/ })).not.toBeInTheDocument();
+  });
+
+  it('fills in the picked day when adding from the calendar', async () => {
+    const { user } = setup();
+    await user.click(screen.getByRole('button', { name: 'Next month' }));
+    await user.click(screen.getByRole('button', { name: 'Add task' }));
+
+    expect(screen.getByLabelText('Due date')).toHaveValue(addMonths(today(), 1));
   });
 });
 
@@ -371,7 +396,7 @@ describe('persistence', () => {
       window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY, newValue }));
     });
 
-    expect(screen.getByText('Read chapter 3')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: /Read chapter 3/ })).toBeInTheDocument();
   });
 
   it('warns when saving fails', async () => {

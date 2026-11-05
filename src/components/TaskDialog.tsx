@@ -16,25 +16,28 @@ interface TaskDialogProps {
   /** The task being edited, or null when adding. */
   task: Task | null;
   defaultListId: string;
+  /** Due date to start with when adding, e.g. the day picked on the calendar. */
+  defaultDue?: string;
   onClose: () => void;
 }
 
-function initialValues(task: Task | null, defaultListId: string): TaskFormValues {
+function initialValues(task: Task | null, defaultListId: string, defaultDue = ''): TaskFormValues {
   return {
     listId: task?.listId ?? defaultListId,
     title: task?.title ?? '',
     type: task?.type ?? DEFAULT_TASK_TYPE,
-    // Left blank when adding, so a wrong deadline can't slip through as a default.
-    due: task?.due ?? '',
+    // Blank when adding, so a wrong deadline can't slip through as a default, unless
+    // the person picked the day themselves on the calendar.
+    due: task?.due ?? defaultDue,
     notes: task?.notes ?? '',
     weight: task?.weight?.toString() ?? '',
   };
 }
 
-export function TaskDialog({ task, defaultListId, onClose }: TaskDialogProps) {
+export function TaskDialog({ task, defaultListId, defaultDue, onClose }: TaskDialogProps) {
   const { data, addTask, updateTask } = useTracker();
   const formRef = useRef<HTMLFormElement>(null);
-  const [values, setValues] = useState(() => initialValues(task, defaultListId));
+  const [values, setValues] = useState(() => initialValues(task, defaultListId, defaultDue));
   const [errors, setErrors] = useState<TaskFormErrors>({});
 
   const set = <K extends keyof TaskFormValues>(key: K, value: TaskFormValues[K]) =>

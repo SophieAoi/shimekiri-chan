@@ -11,9 +11,10 @@ coming up.
 
 ## Features
 
-- **Tabs:** a General tab, one tab per module, and an Upcoming tab that gathers
-  overdue tasks and the next 14 days from every tab, grouped under Overdue, Today,
-  Next 7 days and Later. You can add, rename and delete module tabs, and fold them
+- **Tabs:** a General tab, one tab per module, and an Upcoming tab with a month
+  calendar of every deadline across all tabs. Pick a day to see its tasks, and Add task
+  fills in that date. Overdue work is listed above the calendar so it can't hide in an
+  earlier month. You can add, rename and delete module tabs, and fold them
   away under Modules. Each tab shows how many tasks are left: green normally, red
   when something is urgent.
 - **Task types:** Exam, Homework and Coursework, each with its own coloured tag and

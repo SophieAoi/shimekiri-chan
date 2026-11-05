@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, daysBetween, formatDate, isValidISODate, toISODate } from './dates';
+import {
+  addDays,
+  addMonths,
+  daysBetween,
+  formatDate,
+  formatLongDate,
+  formatMonth,
+  isValidISODate,
+  monthGrid,
+  startOfMonth,
+  toISODate,
+  weekdayIndex,
+} from './dates';
 
 describe('toISODate', () => {
   it('uses the local calendar day, including just before midnight', () => {
@@ -46,5 +58,31 @@ describe('formatDate', () => {
 
   it('includes the year otherwise', () => {
     expect(formatDate('2027-01-04', '2026-11-02')).toBe('Mon 4 Jan 2027');
+  });
+});
+
+describe('calendar helpers', () => {
+  it('numbers weekdays from Monday', () => {
+    expect(weekdayIndex('2026-11-02')).toBe(0); // Monday
+    expect(weekdayIndex('2026-11-08')).toBe(6); // Sunday
+  });
+
+  it('finds month starts and steps across years', () => {
+    expect(startOfMonth('2026-11-25')).toBe('2026-11-01');
+    expect(addMonths('2026-12-15', 1)).toBe('2027-01-01');
+    expect(addMonths('2026-01-31', -1)).toBe('2025-12-01');
+  });
+
+  it('pads a month out to whole Monday-to-Sunday weeks', () => {
+    const grid = monthGrid('2026-11-01'); // 1 Nov 2026 is a Sunday
+    expect(grid[0]).toBe('2026-10-26');
+    expect(grid.at(-1)).toBe('2026-12-06');
+    expect(grid).toHaveLength(42);
+    expect(monthGrid('2027-02-01')).toHaveLength(28); // Feb 2027 starts on a Monday
+  });
+
+  it('formats month and long day labels', () => {
+    expect(formatMonth('2026-11-05')).toBe('November 2026');
+    expect(formatLongDate('2026-11-05')).toBe('Thursday 5 November');
   });
 });

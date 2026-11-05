@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { makeTask } from '../test/factories';
 import { getMood, getMoodMessage } from './mood';
-import { getDueLabel, getUpcomingGroup, getUrgency, sortTasks, upcomingTasks } from './tasks';
+import { getDueLabel, getUrgency, sortTasks, upcomingTasks } from './tasks';
 
 const TODAY = '2026-11-02';
 
@@ -68,18 +68,6 @@ describe('upcomingTasks', () => {
     ];
 
     expect(upcomingTasks(tasks, TODAY).map((task) => task.id)).toEqual(['overdue', 'edge']);
-  });
-});
-
-describe('getUpcomingGroup', () => {
-  it.each([
-    ['2026-11-01', 'overdue'],
-    ['2026-11-02', 'today'],
-    ['2026-11-03', 'week'],
-    ['2026-11-09', 'week'],
-    ['2026-11-10', 'later'],
-  ])('puts a task due %s under %s', (due, expected) => {
-    expect(getUpcomingGroup(makeTask({ due }), TODAY)).toBe(expected);
   });
 });
 

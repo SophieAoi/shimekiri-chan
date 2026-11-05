@@ -28,7 +28,7 @@ const PANEL_ID = 'task-panel';
 const MODULES_SECTION_KEY = 'sidebar:modules';
 
 type OpenDialog =
-  | { kind: 'task'; task: Task | null }
+  | { kind: 'task'; task: Task | null; due?: string }
   | { kind: 'module'; module: Module | null }
   | { kind: 'deleteModule'; module: Module };
 
@@ -126,7 +126,11 @@ function Shell() {
         )}
         <div id={PANEL_ID} className={styles.panel} role="tabpanel" aria-labelledby={tabElementId(activeTab.id)}>
           {activeTab.id === UPCOMING_TAB_ID ? (
-            <UpcomingPanel key={UPCOMING_TAB_ID} onAddTask={actions.onAddTask} onEditTask={actions.onEditTask} />
+            <UpcomingPanel
+              key={UPCOMING_TAB_ID}
+              onAddTask={(due) => setDialog({ kind: 'task', task: null, due })}
+              onEditTask={actions.onEditTask}
+            />
           ) : (
             <ListPanel
               key={activeTab.id}
@@ -146,6 +150,7 @@ function Shell() {
       {dialog?.kind === 'task' && (
         <TaskDialog
           task={dialog.task}
+          defaultDue={dialog.due}
           defaultListId={activeTab.id === UPCOMING_TAB_ID ? GENERAL_LIST_ID : activeTab.id}
           onClose={closeDialog}
         />
