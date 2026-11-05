@@ -23,9 +23,9 @@ const BLUE_SPARKLE = '#a9cdf2';
 /** The face is drawn for the viewer's left side, then mirrored across x = 60. */
 const MIRROR = 'translate(120 0) scale(-1 1)';
 
-/** A wide face, broader than it is tall, with tufts of cheek fluff low on each side. */
+/** A wide face with a slightly longer chin, and tufts of cheek fluff low on each side. */
 const HEAD =
-  'M60 34C92 34 110 50 111 66l7 4-6 4 7 5-8 2 4 6-8 1C98 98 82 104 60 104S22 98 15 88l-8-1 4-6-8-2 7-5-6-4 7-4C10 50 28 34 60 34Z';
+  'M60 29C92 29 110 46 111 64l7 4-6 4 7 5-8 2 4 6-8 1C99 100 82 109 60 109S21 100 15 86l-8-1 4-6-8-2 7-5-6-4 7-4C10 46 28 29 60 29Z';
 
 function Mirrored({ children }: { children: ReactNode }) {
   return (
@@ -51,25 +51,24 @@ function Twinkle({ x, y, size, fill = '#fff', className }: { x: number; y: numbe
 }
 
 /**
- * Big oval gem eye: one solid colour with no separate pupil, a thick outline, a white
- * rim of light along the lower edge, two shine dots and two curled lashes. Tilted so
- * the top leans in towards the nose.
+ * Big, nearly round gem eye: one solid colour with no separate pupil, a thick outline,
+ * a white rim of light along the lower edge, two shine dots and two curled lashes.
  */
 function Eye({ wide = false }: { wide?: boolean }) {
   // Startled eyes open a little taller.
-  const ry = wide ? 15 : 14;
+  const ry = wide ? 14 : 13;
   return (
-    <g transform="rotate(12 38 66)">
-      <ellipse cx="38" cy="66" rx="10.5" ry={ry} fill={IRIS} />
+    <g>
+      <ellipse cx="38" cy="66" rx="11.5" ry={ry} fill={IRIS} />
       {/* Slightly deeper colour across the top of the gem. */}
-      <path d={`M27.5 63a10.5 ${ry} 0 0 1 21 0q-10.5-6-21 0Z`} fill={IRIS_DEEP} opacity="0.55" />
+      <path d={`M26.5 63a11.5 ${ry} 0 0 1 23 0q-11.5-6-23 0Z`} fill={IRIS_DEEP} opacity="0.55" />
       {/* Rim of light along the lower edge. */}
-      <path d={`M28.6 ${66 + ry * 0.2}Q30.2 ${66 + ry * 0.85} 38.5 ${66 + ry - 1.4}Q32.6 ${66 + ry * 0.7} 31.6 ${66 + ry * 0.2}Z`} fill="#fff" />
-      <circle cx="42" cy={66 - ry * 0.55} r="3.6" fill="#fff" />
-      <circle cx="44" cy={66 - ry * 0.12} r="1.9" fill="#fff" />
-      <ellipse cx="38" cy="66" rx="10.5" ry={ry} fill="none" {...line} strokeWidth="3" />
+      <path d={`M27.6 ${66 + ry * 0.2}Q29.4 ${66 + ry * 0.85} 38.5 ${66 + ry - 1.4}Q31.8 ${66 + ry * 0.7} 30.6 ${66 + ry * 0.2}Z`} fill="#fff" />
+      <circle cx="43" cy={66 - ry * 0.5} r="3.6" fill="#fff" />
+      <circle cx="45.4" cy={66 - ry * 0.08} r="1.9" fill="#fff" />
+      <ellipse cx="38" cy="66" rx="11.5" ry={ry} fill="none" {...line} strokeWidth="3" />
       {/* Two curled lashes off the top outer edge. */}
-      <path d="M29.5 56q-6-1.5-7.5-8M33 53q-4.5-3-4.5-9.5" fill="none" {...line} strokeWidth="2.4" />
+      <path d="M28.5 57.5q-6-1.5-7.5-8M32 54.5q-4.5-3-4.5-9.5" fill="none" {...line} strokeWidth="2.4" />
     </g>
   );
 }
@@ -163,7 +162,7 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
           {/* Head, with soft pink shading on the lower edge and down one side. */}
           <path d={HEAD} fill={FUR} />
           <g clipPath={`url(#${headClip})`}>
-            <ellipse cx="60" cy="120" rx="60" ry="20" fill={SHADE} />
+            <ellipse cx="60" cy="124" rx="60" ry="20" fill={SHADE} />
             <ellipse cx="120" cy="78" rx="16" ry="34" fill={SHADE} />
           </g>
           <path d={HEAD} fill="none" {...line} strokeWidth="2.6" />
