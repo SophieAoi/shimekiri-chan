@@ -48,6 +48,41 @@ function Twinkle({ x, y, size, fill = '#fff', className }: { x: number; y: numbe
   );
 }
 
+/** Octagon points around (x, y), starting at a flat top edge. */
+function octagon(x: number, y: number, r: number) {
+  return Array.from({ length: 8 }, (_, i) => {
+    const angle = ((22.5 + i * 45) * Math.PI) / 180;
+    return [x + r * Math.cos(angle), y + r * Math.sin(angle)] as const;
+  });
+}
+
+/**
+ * A round-cut diamond stud seen from the front: a thin silver setting, the octagonal
+ * top with a small table in the middle, facet lines between them and a glint.
+ */
+function DiamondStud({ x, y, fill }: { x: number; y: number; fill: string }) {
+  const outer = octagon(x, y, 4.8);
+  const table = octagon(x, y, 2.2);
+  const points = (list: readonly (readonly [number, number])[]) => list.map(([px, py]) => `${px},${py}`).join(' ');
+  return (
+    <g>
+      <circle cx={x} cy={y} r="6" fill="#dfe5ee" {...line} strokeWidth="1.4" />
+      <polygon points={points(outer)} fill={fill} {...line} strokeWidth="0.9" />
+      <path
+        d={outer.map(([px, py], i) => `M${px} ${py}L${table[i]![0]} ${table[i]![1]}`).join('')}
+        fill="none"
+        stroke={LINE}
+        strokeWidth="0.5"
+        opacity="0.7"
+      />
+      <polygon points={points(table)} fill="#fff" stroke={LINE} strokeWidth="0.5" strokeOpacity="0.7" />
+      <path d={`M${x - 3.2} ${y - 1.4}l1.7-1.7`} stroke="#fff" strokeWidth="1.1" strokeLinecap="round" />
+      <Twinkle className={styles.sparkle} x={x + 8} y={y - 6.5} size={3.2} />
+      <Twinkle className={styles.sparkle} x={x - 7.5} y={y - 6} size={1.8} fill={GEM_BLUE} />
+    </g>
+  );
+}
+
 /**
  * Big, nearly round gem eye: the app's blue gradient with no separate pupil, a thick outline,
  * a white rim of light along the lower edge, two shine dots and two curled lashes.
@@ -177,14 +212,8 @@ export function Mascot({ mood, message }: { mood: Mood; message: string }) {
           </Mirrored>
           <path d="M56.5 78.5q3.5-2 7 0q-1 3-3.5 3.5q-2.5-.5-3.5-3.5Z" fill={NOSE} {...line} strokeWidth="1.4" />
 
-          {/* A diamond stud pierced through the edge of one ear, with a sparkle. */}
-          <g>
-            <path d="M100 42.5h6l2.4 2.7-5.4 6.3-5.4-6.3Z" fill={`url(#${diamond})`} {...line} strokeWidth="1.4" />
-            <path d="M97.6 45.2h10.8M101.3 45.2l1.7 6.3 1.7-6.3M100 42.5l1.3 2.7M106 42.5l-1.3 2.7" fill="none" {...line} strokeWidth="0.8" />
-            <path d="M100.6 43.2h2.2l-.9 1.6h-2.4Z" fill="#fff" />
-            <Twinkle className={styles.sparkle} x={111} y={39} size={3.2} />
-            <Twinkle className={styles.sparkle} x={96} y={38.5} size={1.8} fill={GEM_BLUE} />
-          </g>
+          {/* Diamond stud on the ear, seen face-on like a real piercing. */}
+          <DiamondStud x={99} y={35} fill={`url(#${diamond})`} />
 
           <Face mood={mood} iris={iris} />
         </g>
