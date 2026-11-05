@@ -71,7 +71,7 @@
   color: inherit;
 }
 
-/* Tab names share the headings' serif; the module's full name stays in Inter. */
+/* Tab names share the headings' serif; the module's full name uses the body serif. */
 .label,
 .groupLabel {
   font-family: var(--font-display);

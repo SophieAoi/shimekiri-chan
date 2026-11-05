@@ -1,5 +1,5 @@
 import '@fontsource-variable/playfair-display';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/lora';
 // Latin only: the script face is used for the "Shimekiri" wordmark and nothing else.
 import '@fontsource/great-vibes/latin-400.css';
 import { StrictMode } from 'react';
