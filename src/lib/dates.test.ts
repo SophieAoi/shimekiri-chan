@@ -4,9 +4,11 @@ import {
   addMonths,
   daysBetween,
   formatDate,
+  formatTime,
   formatLongDate,
   formatMonth,
   isValidISODate,
+  isValidTime,
   monthGrid,
   startOfMonth,
   toISODate,
@@ -84,5 +86,21 @@ describe('calendar helpers', () => {
   it('formats month and long day labels', () => {
     expect(formatMonth('2026-11-05')).toBe('November 2026');
     expect(formatLongDate('2026-11-05')).toBe('Thursday 5 November');
+  });
+});
+
+describe('times', () => {
+  it('validates 24-hour times', () => {
+    expect(isValidTime('00:00')).toBe(true);
+    expect(isValidTime('23:59')).toBe(true);
+    expect(isValidTime('24:00')).toBe(false);
+    expect(isValidTime('9:30')).toBe(false);
+  });
+
+  it('formats times as 12-hour with am or pm', () => {
+    expect(formatTime('00:05')).toBe('12:05 am');
+    expect(formatTime('09:30')).toBe('9:30 am');
+    expect(formatTime('12:00')).toBe('12:00 pm');
+    expect(formatTime('23:59')).toBe('11:59 pm');
   });
 });
