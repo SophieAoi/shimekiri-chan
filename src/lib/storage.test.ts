@@ -63,3 +63,11 @@ describe('parseData', () => {
     expect(parseData(raw)?.tasks[0]?.listId).toBe(GENERAL_LIST_ID);
   });
 });
+
+describe('parseData', () => {
+  it('gives tasks saved before due times existed an empty time', () => {
+    const { dueTime: _unused, ...legacy } = makeTask();
+    const parsed = parseData(JSON.stringify({ ...createSeedData(), tasks: [legacy, makeTask({ id: 'bad', dueTime: '99:99' })] }));
+    expect(parsed?.tasks.map((task) => task.dueTime)).toEqual(['', '']);
+  });
+});
