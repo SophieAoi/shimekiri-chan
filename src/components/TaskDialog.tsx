@@ -29,6 +29,7 @@ function initialValues(task: Task | null, defaultListId: string, defaultDue = ''
     // Blank when adding, so a wrong deadline can't slip through as a default, unless
     // the person picked the day themselves on the calendar.
     due: task?.due ?? defaultDue,
+    dueTime: task?.dueTime ?? '',
     notes: task?.notes ?? '',
     weight: task?.weight?.toString() ?? '',
   };
@@ -69,6 +70,19 @@ export function TaskDialog({ task, defaultListId, defaultDue, onClose }: TaskDia
         </Field>
 
         <div className="field-row">
+          <Field label="Due date" error={errors.due}>
+            {(control) => (
+              <input {...control} className="input" type="date" value={values.due} onChange={(e) => set('due', e.target.value)} />
+            )}
+          </Field>
+          <Field label="Time (optional)" error={errors.dueTime}>
+            {(control) => (
+              <input {...control} className="input" type="time" value={values.dueTime} onChange={(e) => set('dueTime', e.target.value)} />
+            )}
+          </Field>
+        </div>
+
+        <div className="field-row">
           <Field label="Type">
             {({ id }) => (
               <select id={id} className="select" value={values.type} onChange={(e) => set('type', e.target.value as TaskType)}>
@@ -80,14 +94,6 @@ export function TaskDialog({ task, defaultListId, defaultDue, onClose }: TaskDia
               </select>
             )}
           </Field>
-          <Field label="Due date" error={errors.due}>
-            {(control) => (
-              <input {...control} className="input" type="date" value={values.due} onChange={(e) => set('due', e.target.value)} />
-            )}
-          </Field>
-        </div>
-
-        <div className="field-row">
           <Field label="List">
             {({ id }) => (
               <select id={id} className="select" value={values.listId} onChange={(e) => set('listId', e.target.value)}>
@@ -100,12 +106,13 @@ export function TaskDialog({ task, defaultListId, defaultDue, onClose }: TaskDia
               </select>
             )}
           </Field>
-          <Field label="Weighting % (optional)" error={errors.weight}>
-            {(control) => (
-              <input {...control} className="input" type="number" inputMode="decimal" min="0" max="100" step="any" value={values.weight} onChange={(e) => set('weight', e.target.value)} />
-            )}
-          </Field>
         </div>
+
+        <Field label="Weighting % (optional)" error={errors.weight}>
+          {(control) => (
+            <input {...control} className="input" type="number" inputMode="decimal" min="0" max="100" step="any" value={values.weight} onChange={(e) => set('weight', e.target.value)} />
+          )}
+        </Field>
 
         <Field label="Notes (optional)" error={errors.notes}>
           {(control) => (
