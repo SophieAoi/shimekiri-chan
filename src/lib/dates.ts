@@ -116,3 +116,16 @@ export function formatLongDate(iso: string): string {
     dateParts.find((item) => item.type === type)?.value;
   return `${part('weekday')} ${part('day')} ${part('month')}`;
 }
+
+/** True for a 24-hour time such as "09:30" or "23:59". */
+export function isValidTime(value: string): boolean {
+  return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+/** "9:30 am" from "09:30". Built by hand so every browser shows the same text. */
+export function formatTime(time: string): string {
+  const [hours = 0, minutes = 0] = time.split(':').map(Number);
+  const suffix = hours < 12 ? 'am' : 'pm';
+  const hour = hours % 12 === 0 ? 12 : hours % 12;
+  return `${hour}:${pad(minutes)} ${suffix}`;
+}
