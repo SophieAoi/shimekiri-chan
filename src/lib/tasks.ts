@@ -1,6 +1,6 @@
 import { DUE_SOON_DAYS, UPCOMING_WINDOW_DAYS } from '../constants';
 import type { Task, TaskType, Urgency } from '../types';
-import { daysBetween, formatDate } from './dates';
+import { daysBetween, formatDate, formatTime } from './dates';
 
 export type TypeFilter = TaskType | 'all';
 
@@ -19,7 +19,7 @@ export function isUrgent(task: Task, today: string): boolean {
 
 /** Human wording for a due date. Urgency is always in the text, never colour alone. */
 export function getDueLabel(task: Task, today: string): string {
-  const date = formatDate(task.due, today);
+  const date = task.dueTime ? `${formatDate(task.due, today)}, ${formatTime(task.dueTime)}` : formatDate(task.due, today);
   if (task.completed) return `Was due ${date}`;
 
   const days = daysBetween(today, task.due);
@@ -30,12 +30,16 @@ export function getDueLabel(task: Task, today: string): string {
   return days <= DUE_SOON_DAYS ? `Due in ${days} days · ${date}` : `Due ${date}`;
 }
 
-/** Unfinished tasks first, then earliest due date, then oldest created. Does not mutate. */
+/** A task with no time counts as due at the end of its day when sorting. */
+const sortTime = (task: Task) => task.dueTime || '24:00';
+
+/** Unfinished tasks first, then earliest due date and time, then oldest created. Does not mutate. */
 export function sortTasks(tasks: readonly Task[]): Task[] {
   return [...tasks].sort(
     (a, b) =>
       Number(a.completed) - Number(b.completed) ||
       a.due.localeCompare(b.due) ||
+      sortTime(a).localeCompare(sortTime(b)) ||
       a.createdAt.localeCompare(b.createdAt),
   );
 }
