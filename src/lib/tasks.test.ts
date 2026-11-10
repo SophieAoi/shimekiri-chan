@@ -100,3 +100,18 @@ describe('getMoodMessage', () => {
     expect(getMoodMessage('nervous', 2)).toContain('2 deadlines are');
   });
 });
+
+describe('due times', () => {
+  it('adds the time to the label', () => {
+    expect(getDueLabel(makeTask({ due: TODAY, dueTime: '14:30' }), TODAY)).toBe('Due today · Mon 2 Nov, 2:30 pm');
+  });
+
+  it('sorts by time within a day, with untimed tasks last', () => {
+    const tasks = [
+      makeTask({ id: 'untimed', due: TODAY }),
+      makeTask({ id: 'late', due: TODAY, dueTime: '18:00' }),
+      makeTask({ id: 'early', due: TODAY, dueTime: '09:00' }),
+    ];
+    expect(sortTasks(tasks).map((task) => task.id)).toEqual(['early', 'late', 'untimed']);
+  });
+});
