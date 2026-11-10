@@ -1,7 +1,7 @@
 import { GENERAL_LIST_ID, TASK_TYPES } from '../constants';
 import { createSeedData } from '../data/seed';
 import type { AppData, Module, Task } from '../types';
-import { isValidISODate } from './dates';
+import { isValidISODate, isValidTime } from './dates';
 
 export const STORAGE_KEY = 'shimekiri:data';
 export const BACKUP_KEY = 'shimekiri:data-backup';
@@ -18,7 +18,7 @@ function toModule(value: unknown): Module | null {
 
 function toTask(value: unknown, listIds: ReadonlySet<string>): Task | null {
   if (!isRecord(value)) return null;
-  const { id, listId, title, type, due, notes, weight, completed, createdAt } = value;
+  const { id, listId, title, type, due, dueTime, notes, weight, completed, createdAt } = value;
   const knownType = TASK_TYPES.find((meta) => meta.value === type);
 
   if (typeof id !== 'string' || typeof title !== 'string') return null;
@@ -31,6 +31,8 @@ function toTask(value: unknown, listIds: ReadonlySet<string>): Task | null {
     title,
     type: knownType.value,
     due,
+    // Tasks saved before times existed simply have none.
+    dueTime: typeof dueTime === 'string' && isValidTime(dueTime) ? dueTime : '',
     notes: typeof notes === 'string' ? notes : '',
     weight: typeof weight === 'number' && Number.isFinite(weight) ? weight : null,
     completed: completed === true,
