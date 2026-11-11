@@ -5,12 +5,12 @@ import {
   TITLE_MAX_LENGTH,
 } from '../constants';
 import type { ModuleDraft, TaskDraft } from '../types';
-import { isValidISODate } from './dates';
+import { isValidISODate, isValidTime } from './dates';
 
 /** Raw form values. Weight stays a string so an empty field is distinct from 0. */
 export type TaskFormValues = Omit<TaskDraft, 'weight'> & { weight: string };
 
-export type TaskFormErrors = Partial<Record<'title' | 'due' | 'notes' | 'weight', string>>;
+export type TaskFormErrors = Partial<Record<'title' | 'due' | 'dueTime' | 'notes' | 'weight', string>>;
 
 function validateWeight(raw: string): string | undefined {
   if (raw.trim() === '') return undefined;
@@ -30,6 +30,7 @@ export function validateTask(values: TaskFormValues): TaskFormErrors {
   }
   if (!values.due) errors.due = 'Choose a due date.';
   else if (!isValidISODate(values.due)) errors.due = 'Enter a valid date.';
+  if (values.dueTime && !isValidTime(values.dueTime)) errors.dueTime = 'Enter a valid time.';
   if (values.notes.trim().length > NOTES_MAX_LENGTH) {
     errors.notes = `Keep notes under ${NOTES_MAX_LENGTH} characters.`;
   }
@@ -47,6 +48,7 @@ export function toTaskDraft(values: TaskFormValues): TaskDraft {
     title: values.title.trim(),
     type: values.type,
     due: values.due,
+    dueTime: values.dueTime,
     notes: values.notes.trim(),
     weight: weight === '' ? null : Number(weight),
   };
