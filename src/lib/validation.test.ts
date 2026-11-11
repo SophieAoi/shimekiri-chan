@@ -7,11 +7,17 @@ const valid: TaskFormValues = {
   title: 'Essay',
   type: 'coursework',
   due: '2026-11-20',
+  dueTime: '',
   notes: '',
   weight: '',
 };
 
 describe('validateTask', () => {
+  it('accepts an optional time and rejects a malformed one', () => {
+    expect(validateTask({ ...valid, dueTime: '23:59' })).toEqual({});
+    expect(validateTask({ ...valid, dueTime: '25:00' })).toEqual({ dueTime: 'Enter a valid time.' });
+  });
+
   it('passes a minimal valid task', () => {
     expect(validateTask(valid)).toEqual({});
   });
