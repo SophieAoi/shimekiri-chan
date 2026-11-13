@@ -21,8 +21,8 @@ describe('reducer', () => {
 
   it('updates a task without touching its completed status', () => {
     const done = reducer(base, { type: 'task/toggle', id: 'in-general' });
-    const { listId, type, due, notes, weight } = makeTask();
-    const draft = { listId, type, due, notes, weight, title: 'Renamed' };
+    const { listId, type, due, dueTime, notes, weight } = makeTask();
+    const draft = { listId, type, due, dueTime, notes, weight, title: 'Renamed' };
     const next = reducer(done, { type: 'task/update', id: 'in-general', draft });
 
     expect(next.tasks[0]).toMatchObject({ title: 'Renamed', completed: true });

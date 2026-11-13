@@ -8,6 +8,7 @@ export function makeTask(overrides: Partial<Task> = {}): Task {
     title: 'Read chapter 3',
     type: 'homework',
     due: '2026-11-20',
+    dueTime: '',
     notes: '',
     weight: null,
     completed: false,
