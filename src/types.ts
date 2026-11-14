@@ -13,6 +13,8 @@ export interface Task {
   type: TaskType;
   /** Local calendar date as YYYY-MM-DD. Deliberately not a timestamp, see lib/dates.ts. */
   due: string;
+  /** Optional time on the due date as 24-hour HH:MM, or '' when only the day matters. */
+  dueTime: string;
   notes: string;
   /** Percentage of the module grade, or null when not set. */
   weight: number | null;
@@ -22,7 +24,7 @@ export interface Task {
 }
 
 /** The fields a person edits in the task form. */
-export type TaskDraft = Pick<Task, 'listId' | 'title' | 'type' | 'due' | 'notes' | 'weight'>;
+export type TaskDraft = Pick<Task, 'listId' | 'title' | 'type' | 'due' | 'dueTime' | 'notes' | 'weight'>;
 
 export interface Module {
   id: string;
