@@ -16,7 +16,7 @@ Shimekiri-chan, a jewel-eyed cat, keeps an eye on what's coming up.
   are left: green normally, red when something is urgent.
 - **Upcoming calendar:** a month view of every unfinished task across all tabs. Each
   day shows its tasks as coloured chips (dots on phones). Pick a day to list its
-  tasks, and Add task fills in that date. Overdue work is listed above the calendar
+  tasks above the grid, and Add task fills in that date. Overdue work is listed at the top
   so it can't hide in an earlier month.
 - **Task types:** Exam, Homework and Coursework, each with its own coloured tag and
   icon. Tabs group tasks into collapsible sections by type, with a filter to show one
