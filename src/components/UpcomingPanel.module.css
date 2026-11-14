@@ -33,3 +33,12 @@
   padding: 0;
   list-style: none;
 }
+
+.dayEmpty {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}

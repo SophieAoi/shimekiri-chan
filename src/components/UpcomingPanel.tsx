@@ -5,7 +5,7 @@ import { getUrgency, matchesFilter, sortTasks, type TypeFilter } from '../lib/ta
 import { useTracker } from '../state/TrackerContext';
 import type { Task } from '../types';
 import { Calendar } from './Calendar';
-import { EmptyState, PanelHeader, PanelToolbar } from './Panel';
+import { PanelHeader, PanelToolbar } from './Panel';
 import { TaskItem } from './TaskItem';
 import styles from './UpcomingPanel.module.css';
 
@@ -16,9 +16,9 @@ interface UpcomingPanelProps {
 }
 
 /**
- * A month calendar of every unfinished task across all tabs. Overdue work is listed
- * above it, so nothing slips out of sight in an earlier month, and the picked day's
- * tasks are listed below it with the usual controls.
+ * A month calendar of every unfinished task across all tabs. Overdue work and the
+ * picked day's tasks are listed above it, so nothing slips out of sight in an earlier
+ * month and the day's tasks are visible without scrolling past the grid.
  */
 export function UpcomingPanel({ onAddTask, onEditTask }: UpcomingPanelProps) {
   const { data, today } = useTracker();
@@ -76,6 +76,20 @@ export function UpcomingPanel({ onAddTask, onEditTask }: UpcomingPanelProps) {
         </section>
       )}
 
+      <section className={styles.group}>
+        <h3 className={styles.heading} aria-live="polite">
+          {selected === today ? `Today, ${formatLongDate(selected)}` : formatLongDate(selected)}
+          {onDay.length > 0 && <span className={styles.count}>{onDay.length}</span>}
+        </h3>
+        {onDay.length > 0 && renderList(onDay)}
+        {onDay.length === 0 && (
+          // A single quiet line, so an empty day doesn't push the calendar down.
+          <p className={styles.dayEmpty}>
+            {overdueOnDay ? 'This day’s tasks are overdue. See the list above.' : 'Nothing due on this day.'}
+          </p>
+        )}
+      </section>
+
       <Calendar
         month={month}
         selected={selected}
@@ -84,17 +98,6 @@ export function UpcomingPanel({ onAddTask, onEditTask }: UpcomingPanelProps) {
         onSelect={select}
         onMonthChange={changeMonth}
       />
-
-      <section className={styles.group}>
-        <h3 className={styles.heading} aria-live="polite">
-          {selected === today ? `Today, ${formatLongDate(selected)}` : formatLongDate(selected)}
-          {onDay.length > 0 && <span className={styles.count}>{onDay.length}</span>}
-        </h3>
-        {onDay.length > 0 && renderList(onDay)}
-        {onDay.length === 0 && (
-          <EmptyState>{overdueOnDay ? 'This day’s tasks are overdue. See the list above.' : 'Nothing due on this day.'}</EmptyState>
-        )}
-      </section>
     </>
   );
 }
