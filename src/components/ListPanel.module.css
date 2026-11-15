@@ -1,7 +1,9 @@
 /* Tasks / Lectures switch under a module's title: an underlined tab row. */
 .viewTabs {
   display: flex;
-  gap: var(--space-1);
+  /* Tabs have no side padding, so the first icon lines up with the title above;
+     the gap does the spacing and each underline hugs its label. */
+  gap: var(--space-5);
   margin: 0 0 var(--space-4);
   border-bottom: 1px solid var(--line);
 }
@@ -12,7 +14,7 @@
   gap: 6px;
   min-height: 44px;
   margin-bottom: -1px;
-  padding: 0 var(--space-3);
+  padding: 0;
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;

@@ -21,6 +21,9 @@
 
 .summary {
   margin: 4px 0 0;
+  /* The display serif's capitals sit a hair inside their box, so nudge the
+     smaller summary in to line up with the title's first letter. */
+  padding-left: 1px;
   color: var(--ink-soft);
   font-size: 0.875rem;
 }
