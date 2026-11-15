@@ -35,8 +35,25 @@ export interface Module {
 
 export type ModuleDraft = Pick<Module, 'name' | 'code'>;
 
+/** One lecture in a module's lecture tracker. */
+export interface Lecture {
+  id: string;
+  moduleId: string;
+  title: string;
+  /** Local calendar date as YYYY-MM-DD, or '' when not set. */
+  date: string;
+  attended: boolean;
+  /** Notes written up or recording rewatched: the lecture has been gone over since. */
+  reviewed: boolean;
+  createdAt: string;
+}
+
+export type LectureDraft = Pick<Lecture, 'title' | 'date'>;
+export type LectureCheck = 'attended' | 'reviewed';
+
 export interface AppData {
   version: 1;
   modules: Module[];
   tasks: Task[];
+  lectures: Lecture[];
 }

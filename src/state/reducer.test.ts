@@ -9,6 +9,7 @@ const base: AppData = {
   version: 1,
   modules: [moduleA],
   tasks: [makeTask({ id: 'in-general' }), makeTask({ id: 'in-module', listId: moduleA.id })],
+  lectures: [],
 };
 
 describe('reducer', () => {
@@ -53,5 +54,33 @@ describe('reducer', () => {
     const snapshot = structuredClone(base);
     reducer(base, { type: 'module/delete', id: moduleA.id });
     expect(base).toEqual(snapshot);
+  });
+});
+
+describe('lectures', () => {
+  const lecture = {
+    id: 'lec-1',
+    moduleId: moduleA.id,
+    title: 'Lecture 1',
+    date: '',
+    attended: false,
+    reviewed: false,
+    createdAt: '2026-11-01T00:00:00.000Z',
+  };
+  const withLecture = reducer(base, { type: 'lecture/add', lecture });
+
+  it('adds, renames and ticks off a lecture', () => {
+    const renamed = reducer(withLecture, { type: 'lecture/update', id: 'lec-1', draft: { title: 'Search', date: '2026-11-03' } });
+    const attended = reducer(renamed, { type: 'lecture/toggle', id: 'lec-1', check: 'attended' });
+    expect(attended.lectures).toEqual([{ ...lecture, title: 'Search', date: '2026-11-03', attended: true }]);
+  });
+
+  it('deleting a module removes its lectures too', () => {
+    expect(reducer(withLecture, { type: 'module/delete', id: moduleA.id }).lectures).toEqual([]);
+  });
+
+  it('does not restore a lecture into a module that has gone', () => {
+    const gone = reducer(base, { type: 'module/delete', id: moduleA.id });
+    expect(reducer(gone, { type: 'lecture/add', lecture }).lectures).toEqual([]);
   });
 });

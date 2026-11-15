@@ -12,5 +12,6 @@ export function createSeedData(): AppData {
       { id: 'seed-fyp', code: '', name: 'Final Year Project' },
     ],
     tasks: [],
+    lectures: [],
   };
 }

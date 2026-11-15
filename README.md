@@ -18,6 +18,10 @@ Shimekiri-chan, a jewel-eyed cat, keeps an eye on what's coming up.
   day shows its tasks as coloured chips (dots on phones). Pick a day to list its
   tasks above the grid, and Add task fills in that date. Overdue work is listed at the top
   so it can't hide in an earlier month.
+- **Lecture tracker:** each module page has Tasks and Lectures tabs. Add a lecture in
+  one step (leave the title blank to use the suggested "Lecture N"), give it an
+  optional date, and tick off Attended and Reviewed. Progress bars show how far
+  through the module you are.
 - **Task types:** Exam, Homework and Coursework, each with its own coloured tag and
   icon. Tabs group tasks into collapsible sections by type, with a filter to show one
   type at a time.
@@ -100,7 +104,7 @@ src/
   state/                   Reducer and TrackerContext (actions, persistence, undo toasts, mood)
   hooks/                   useToday (keeps "today" fresh), usePrefs (open tab, folded sections),
                            useMediaQuery (sidebar or tab row)
-  components/              UI: Mascot, Tabs, Calendar, panels, task sections and rows, dialogs, toast
+  components/              UI: Mascot, Tabs, Calendar, lecture tracker, panels, task rows, dialogs, toast
   styles/                  Colour, spacing and font tokens plus shared base styles
 e2e/                       Playwright browser tests
 docs/                      Build plan and screenshots

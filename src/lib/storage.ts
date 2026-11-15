@@ -1,6 +1,6 @@
 import { GENERAL_LIST_ID, TASK_TYPES } from '../constants';
 import { createSeedData } from '../data/seed';
-import type { AppData, Module, Task } from '../types';
+import type { AppData, Lecture, Module, Task } from '../types';
 import { isValidISODate, isValidTime } from './dates';
 
 export const STORAGE_KEY = 'shimekiri:data';
@@ -40,6 +40,24 @@ function toTask(value: unknown, listIds: ReadonlySet<string>): Task | null {
   };
 }
 
+function toLecture(value: unknown, moduleIds: ReadonlySet<string>): Lecture | null {
+  if (!isRecord(value)) return null;
+  const { id, moduleId, title, date, attended, reviewed, createdAt } = value;
+  if (typeof id !== 'string' || typeof title !== 'string') return null;
+  // Lectures only exist inside a module, so one whose module is gone is dropped.
+  if (typeof moduleId !== 'string' || !moduleIds.has(moduleId)) return null;
+
+  return {
+    id,
+    moduleId,
+    title,
+    date: typeof date === 'string' && isValidISODate(date) ? date : '',
+    attended: attended === true,
+    reviewed: reviewed === true,
+    createdAt: typeof createdAt === 'string' ? createdAt : '',
+  };
+}
+
 /** Parses saved JSON. Returns null when the whole blob is unusable. */
 export function parseData(raw: string): AppData | null {
   let parsed: unknown;
@@ -58,7 +76,13 @@ export function parseData(raw: string): AppData | null {
     .map((item) => toTask(item, listIds))
     .filter((item) => item !== null);
 
-  return { version: 1, modules, tasks };
+  // Data saved before the lecture tracker existed has no lectures yet.
+  const moduleIds = new Set(modules.map((module) => module.id));
+  const lectures = (Array.isArray(parsed.lectures) ? parsed.lectures : [])
+    .map((item) => toLecture(item, moduleIds))
+    .filter((item) => item !== null);
+
+  return { version: 1, modules, tasks, lectures };
 }
 
 /**

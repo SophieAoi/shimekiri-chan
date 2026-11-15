@@ -408,3 +408,46 @@ describe('persistence', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/couldn't save/);
   });
 });
+
+describe('lecture tracker', () => {
+  it('adds lectures, ticks them off and remembers the Lectures view', async () => {
+    const { user, unmount } = setup();
+    await openTab(user, /^COMP3070/);
+    await user.click(screen.getByRole('tab', { name: /Lectures/ }));
+
+    // An empty title takes the suggested name, so the next lecture is one click.
+    await user.click(screen.getByRole('button', { name: 'Add lecture' }));
+    await user.type(screen.getByLabelText('Lecture title'), 'Unification{Enter}');
+    expect(screen.getByText('Lecture 1')).toBeInTheDocument();
+    expect(screen.getByText('Unification')).toBeInTheDocument();
+
+    const attended = screen.getByRole('button', { name: 'Attended: Lecture 1' });
+    await user.click(attended);
+    expect(attended).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('progressbar', { name: 'Attended' })).toHaveAttribute('aria-valuenow', '1');
+    expect(savedData().lectures).toHaveLength(2);
+
+    // Delete offers Undo, like tasks.
+    await user.click(screen.getByRole('button', { name: 'Delete "Unification"' }));
+    await user.click(screen.getByRole('button', { name: 'Undo' }));
+    expect(screen.getByText('Unification')).toBeInTheDocument();
+
+    unmount();
+    setup();
+    expect(screen.getByRole('tab', { name: /Lectures/ })).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('renames a lecture inline', async () => {
+    const { user } = setup();
+    await openTab(user, /^COMP3070/);
+    await user.click(screen.getByRole('tab', { name: /Lectures/ }));
+    await user.click(screen.getByRole('button', { name: 'Add lecture' }));
+
+    await user.click(screen.getByRole('button', { name: 'Edit "Lecture 1"' }));
+    const rows = screen.getAllByLabelText('Lecture title');
+    await user.clear(rows[1]!);
+    await user.type(rows[1]!, 'Resolution');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    expect(screen.getByText('Resolution')).toBeInTheDocument();
+  });
+});

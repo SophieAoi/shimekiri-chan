@@ -3,8 +3,13 @@ import { UPCOMING_TAB_ID } from '../constants';
 
 const PREFS_KEY = 'shimekiri:prefs';
 
+/** Which part of a module page is showing. */
+export type ModuleView = 'tasks' | 'lectures';
+
 interface Prefs {
   activeTabId: string;
+  /** Remembered across modules, so you can go through each one's lectures in turn. */
+  moduleView: ModuleView;
   /** Collapsed sections, stored as sectionKey(listId, type). */
   collapsed: string[];
 }
@@ -12,14 +17,15 @@ interface Prefs {
 export const sectionKey = (listId: string, type: string) => `${listId}:${type}`;
 
 function loadPrefs(): Prefs {
-  const fallback: Prefs = { activeTabId: UPCOMING_TAB_ID, collapsed: [] };
+  const fallback: Prefs = { activeTabId: UPCOMING_TAB_ID, moduleView: 'tasks', collapsed: [] };
   try {
     const saved: unknown = JSON.parse(localStorage.getItem(PREFS_KEY) ?? 'null');
     if (typeof saved !== 'object' || saved === null) return fallback;
 
-    const { activeTabId, collapsed } = saved as Partial<Prefs>;
+    const { activeTabId, moduleView, collapsed } = saved as Partial<Prefs>;
     return {
       activeTabId: typeof activeTabId === 'string' ? activeTabId : fallback.activeTabId,
+      moduleView: moduleView === 'lectures' ? 'lectures' : 'tasks',
       collapsed: Array.isArray(collapsed) ? collapsed.filter((k) => typeof k === 'string') : [],
     };
   } catch {
@@ -43,6 +49,10 @@ export function usePrefs() {
     setPrefs((current) => ({ ...current, activeTabId }));
   }, []);
 
+  const setModuleView = useCallback((moduleView: ModuleView) => {
+    setPrefs((current) => ({ ...current, moduleView }));
+  }, []);
+
   const toggleSection = useCallback((key: string) => {
     setPrefs((current) => ({
       ...current,
@@ -52,5 +62,5 @@ export function usePrefs() {
     }));
   }, []);
 
-  return { ...prefs, setActiveTab, toggleSection };
+  return { ...prefs, setActiveTab, setModuleView, toggleSection };
 }

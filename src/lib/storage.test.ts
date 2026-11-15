@@ -16,7 +16,7 @@ describe('loadData', () => {
   });
 
   it('does not bring the seed back after every module was deleted', () => {
-    saveData({ version: 1, modules: [], tasks: [] });
+    saveData({ version: 1, modules: [], tasks: [], lectures: [] });
     expect(loadData().modules).toEqual([]);
   });
 
@@ -69,5 +69,17 @@ describe('parseData', () => {
     const { dueTime: _unused, ...legacy } = makeTask();
     const parsed = parseData(JSON.stringify({ ...createSeedData(), tasks: [legacy, makeTask({ id: 'bad', dueTime: '99:99' })] }));
     expect(parsed?.tasks.map((task) => task.dueTime)).toEqual(['', '']);
+  });
+});
+
+describe('lectures in saved data', () => {
+  it('starts with none when the data predates the lecture tracker', () => {
+    const { lectures: _unused, ...legacy } = createSeedData();
+    expect(parseData(JSON.stringify(legacy))?.lectures).toEqual([]);
+  });
+
+  it('drops lectures whose module no longer exists', () => {
+    const lecture = { id: 'l', moduleId: 'gone', title: 'Lecture 1', date: '', attended: false, reviewed: false, createdAt: '' };
+    expect(parseData(JSON.stringify({ ...createSeedData(), lectures: [lecture] }))?.lectures).toEqual([]);
   });
 });

@@ -34,7 +34,7 @@ type OpenDialog =
 
 function Shell() {
   const { data, today, mood, saveFailed, addModule, updateModule } = useTracker();
-  const { activeTabId, collapsed, setActiveTab, toggleSection } = usePrefs();
+  const { activeTabId, moduleView, collapsed, setActiveTab, setModuleView, toggleSection } = usePrefs();
   const [dialog, setDialog] = useState<OpenDialog | null>(null);
   const isWide = useMediaQuery(SIDEBAR_MEDIA_QUERY);
   const closeDialog = () => setDialog(null);
@@ -139,6 +139,8 @@ function Shell() {
               module={activeModule}
               collapsed={collapsed}
               onToggleSection={toggleSection}
+              view={moduleView}
+              onViewChange={setModuleView}
               actions={actions}
             />
           )}

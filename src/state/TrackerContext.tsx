@@ -13,7 +13,7 @@ import { HAPPY_DURATION_MS } from '../constants';
 import { useToday } from '../hooks/useToday';
 import { getMood } from '../lib/mood';
 import { loadData, parseData, saveData, STORAGE_KEY } from '../lib/storage';
-import type { AppData, Module, ModuleDraft, Mood, Task, TaskDraft } from '../types';
+import type { AppData, Lecture, LectureCheck, LectureDraft, Module, ModuleDraft, Mood, Task, TaskDraft } from '../types';
 import { reducer } from './reducer';
 
 export interface ToastMessage {
@@ -34,6 +34,11 @@ interface TrackerValue {
   /** Finishing a task offers Undo, because it moves out of sight into Completed. */
   toggleTask: (task: Task) => void;
   deleteTask: (task: Task) => void;
+  addLecture: (moduleId: string, draft: LectureDraft) => void;
+  updateLecture: (id: string, draft: LectureDraft) => void;
+  toggleLecture: (lecture: Lecture, check: LectureCheck) => void;
+  /** Offers Undo, like deleting a task. */
+  deleteLecture: (lecture: Lecture) => void;
   addModule: (draft: ModuleDraft) => string;
   updateModule: (id: string, draft: ModuleDraft) => void;
   deleteModule: (module: Module) => void;
@@ -113,6 +118,27 @@ export function TrackerProvider({ children }: { children: ReactNode }) {
           id: createId(),
           message: `Deleted "${task.title}"`,
           undo: () => dispatch({ type: 'task/restore', task }),
+        });
+      },
+      addLecture: (moduleId, draft) => {
+        const lecture: Lecture = {
+          ...draft,
+          id: createId(),
+          moduleId,
+          attended: false,
+          reviewed: false,
+          createdAt: new Date().toISOString(),
+        };
+        dispatch({ type: 'lecture/add', lecture });
+      },
+      updateLecture: (id, draft) => dispatch({ type: 'lecture/update', id, draft }),
+      toggleLecture: (lecture, check) => dispatch({ type: 'lecture/toggle', id: lecture.id, check }),
+      deleteLecture: (lecture) => {
+        dispatch({ type: 'lecture/delete', id: lecture.id });
+        setToast({
+          id: createId(),
+          message: `Deleted "${lecture.title}"`,
+          undo: () => dispatch({ type: 'lecture/add', lecture }),
         });
       },
       addModule: (draft) => {
